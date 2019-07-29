@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在看《深度探索c++对象模型》对于对象模型有了一点了解，做一个总结。以下的一些结论的实验见：https://github.com/xtestw/CPPObjModelTest  c++对象模型 单个对象模型 单继承对象模型 不考虑虚函数的单继承 考虑虚函数的单继承   多继承对象模型 存在虚基类的对象模型    单个对象模型对于一个单个对象而言，对象的内部结构是类似于一张表结构，依次存储着c+">
+<meta name="keywords" content="blog,java,xtestw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++对象模型">
+<meta property="og:url" content="http://yoursite.com/2016/05/05/cplusplusobjectmodel/index.html">
+<meta property="og:site_name" content="XtestW&#39;s Blog">
+<meta property="og:description" content="最近在看《深度探索c++对象模型》对于对象模型有了一点了解，做一个总结。以下的一些结论的实验见：https://github.com/xtestw/CPPObjModelTest  c++对象模型 单个对象模型 单继承对象模型 不考虑虚函数的单继承 考虑虚函数的单继承   多继承对象模型 存在虚基类的对象模型    单个对象模型对于一个单个对象而言，对象的内部结构是类似于一张表结构，依次存储着c+">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://i.imgur.com/lVYnj2P.png">
+<meta property="og:image" content="http://i.imgur.com/11kcdkI.png">
+<meta property="og:image" content="http://i.imgur.com/mnAVrDA.png">
+<meta property="og:image" content="http://i.imgur.com/ZXmsdm4.png">
+<meta property="og:image" content="http://i.imgur.com/P5WybyU.png">
+<meta property="og:updated_time" content="2019-07-29T15:22:50.130Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="c++对象模型">
+<meta name="twitter:description" content="最近在看《深度探索c++对象模型》对于对象模型有了一点了解，做一个总结。以下的一些结论的实验见：https://github.com/xtestw/CPPObjModelTest  c++对象模型 单个对象模型 单继承对象模型 不考虑虚函数的单继承 考虑虚函数的单继承   多继承对象模型 存在虚基类的对象模型    单个对象模型对于一个单个对象而言，对象的内部结构是类似于一张表结构，依次存储着c+">
+<meta name="twitter:image" content="http://i.imgur.com/lVYnj2P.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/05/cplusplusobjectmodel/">
+
+
+
+
+
+  <title>c++对象模型 | XtestW's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">XtestW's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/05/cplusplusobjectmodel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">c++对象模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-05T00:22:50+08:00">
+                2016-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在看《深度探索c++对象模型》对于对象模型有了一点了解，做一个总结。以下的一些结论的实验见：<a href="https://github.com/xtestw/CPPObjModelTest" target="_blank" rel="noopener">https://github.com/xtestw/CPPObjModelTest</a></p>
+<ul>
+<li><a href="#toc_0">c++对象模型</a><ul>
+<li><a href="#toc_1">单个对象模型</a></li>
+<li><a href="#toc_2">单继承对象模型</a><ul>
+<li><a href="#toc_3">不考虑虚函数的单继承</a></li>
+<li><a href="#toc_4">考虑虚函数的单继承</a></li>
+</ul>
+</li>
+<li><a href="#toc_5">多继承对象模型</a></li>
+<li><a href="#toc_6">存在虚基类的对象模型</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="单个对象模型"><a href="#单个对象模型" class="headerlink" title="单个对象模型"></a>单个对象模型</h2><p>对于一个单个对象而言，对象的内部结构是类似于一张表结构，依次存储着c++的对象内部数据，我们都知道，一个c++的类内部一般会包含下面的几个部分：</p>
+<ul>
+<li>非静态成员变量</li>
+<li>非静态成员函数</li>
+<li>静态成员变量</li>
+<li>静态成员函数</li>
+<li>虚函数</li>
+<li>友元函数</li>
+<li>构造函数、析构函数、拷贝构造函数</li>
+</ul>
+<p>对于一个简单的对象，将设我们定义类如下：</p>
+<pre><code>class base{
+    public:
+        base();
+        virtual ~base();
+        int a,b;
+        void f();
+        static int c,d;
+        static void f2();
+        virtual void f3();
+};</code></pre><p>不考虑继承的话，他们的存储结构会是这样的一个结构，如下图： <img src="http://i.imgur.com/lVYnj2P.png" alt> 其中，非静态数据成员，被放在对象的内部，而虚函数会放在对象的一个虚表中，对象在编译的时候会形成一个vptr的指针置于对象的内部，其指针指向这张虚表（考虑类的继承和多态，指向这张虚表的vptr的设置和重置会在构造函数、析构函数和拷贝函数中自动完成）。 对象在图对象表中的位置，是按照对象的申明顺序来排列的。比如a,b的申明，因为a先申明的，那么a就被先压栈，占据高地址。 而如图所见，不论虚函数是多少个，对象内部只有一个指针指向它，所以始终占一个指针大小的空间（32位机器下是4byte). 而对这个vptr在对象中的位置，不同的编译器的处理是不一样的，vc为代表的是将其放在了头部，而gcc等则是将其放在了对象的尾部，放在尾部是为了综合考虑与C的struct的兼容问题，而在头部，则是考虑继承之后的子类在调用vptr的方便性。(我个人更偏向于放在头部，因为这样在继承的时候更好理解也更方便自然),本文中的代码和模型是基于g++编译器做的实验，都是放在头部的。 还有一个问题，《深度探索c++对象模型》中，对这个1byte的类的type_info位置，他是说放在虚表的第一个位置，而其实g++中，下面这个实验，并不是放在虚表中的：</p>
+<pre><code>#include &lt;iostream&gt;
+using namespace std;
+class base{
+    public:
+        virtual void f(){cout&lt;&lt;&quot;f&quot;&lt;&lt;endl;}
+        virtual void f1(){cout&lt;&lt;&quot;f1&quot;&lt;&lt;endl;}
+};
+typedef void(*Fun)(void);
+int main(){
+    base b;
+    ((Fun)*(int*)*(int*)(&amp;b))();
+    ((Fun)*((int*)*(int*)(&amp;b)+1))();
+    return 0;
+}</code></pre><p>上面的这段代码的输出是</p>
+<pre><code>f
+f1</code></pre><p>可见虚表的第一项并不是type_info。</p>
+<h2 id="单继承对象模型"><a href="#单继承对象模型" class="headerlink" title="单继承对象模型"></a>单继承对象模型</h2><h3 id="不考虑虚函数的单继承"><a href="#不考虑虚函数的单继承" class="headerlink" title="不考虑虚函数的单继承"></a>不考虑虚函数的单继承</h3><p>在对象申明的过程中，如果从上级单继承了一个对象，那么对父类的成员变量的存储是怎样的一个结构呢，参看下面的代码</p>
+<pre><code>class base{
+    public:
+        int a,b;
+};
+class derived:public base{
+    public:
+        int c,d;
+};</code></pre><p>子类从父类继承过来的成员变量，无论是private,protected,public,也无论是通过private,protected还是public的方式继承过来的，其在子类中的对象中，都有内存空间来存储它，只是这些成员变量对子类的函数的可访问性的问题而已，不考虑非虚函数和静态变量这些（下面的没说明也是一样）没有存在类里的成员，类内部的结构应该是下面这种情况： <img src="http://i.imgur.com/11kcdkI.png" alt> 这个地方需要注意的是，如果基类的b不是int类型，而是char类型，而且c,d也都不是int类型，也都是char类型，我们sizeof(derived)的值是多少呢？！ 答案是12！<strong>因为在继承过来的时候，基类已经做了位对齐的处理，在b和c之间填充了3个空字节，</strong>所以，</p>
+<pre><code>sizeof（derived)=sizeof(base)+1(c)+1(d)+2(padding);</code></pre><h3 id="考虑虚函数的单继承"><a href="#考虑虚函数的单继承" class="headerlink" title="考虑虚函数的单继承"></a>考虑虚函数的单继承</h3><p>如果父类中，出现虚函数，子类中也出现虚函数，会是怎样的一个结构呢？！比如下面的代码：</p>
+<pre><code>class base{
+    public:
+        int a,b;
+        virtual void f();
+};
+class derived:public base{
+    public:
+        int c,d;
+        virtual void f2();
+};</code></pre><p>在实际的存储中的结构应该是这个样子的： <img src="http://i.imgur.com/mnAVrDA.png" alt></p>
+<h2 id="多继承对象模型"><a href="#多继承对象模型" class="headerlink" title="多继承对象模型"></a>多继承对象模型</h2><p>上面讨论了单继承的对象模型，现在讨论一下多继承的对象模型，比如下面的代码：</p>
+<pre><code>class base1{
+    public:
+        int a,b;
+        virtual void f();
+};
+class base2{
+    public:
+        int c,d;
+        virtual void f2();
+};
+class derived:public base1,public base2{
+    public:
+        int e,ff;
+        virtual void f3();
+};</code></pre><p>上面的代码，在类中的布局应该是下面的这样的： <img src="http://i.imgur.com/ZXmsdm4.png" alt> 在这种继承模式下，每个父类都会有一张自己的虚表，里面包含自己的虚函数，而派生类中自己的虚函数，则是放在第一个虚表中的，如果派生类重写了虚函数，那么会自动替换成派生类的虚函数。</p>
+<h2 id="存在虚基类的对象模型"><a href="#存在虚基类的对象模型" class="headerlink" title="存在虚基类的对象模型"></a>存在虚基类的对象模型</h2><p>对象继承中，涉及到虚基类的问题，对象继承链中，虚基类只会保存一个实例。如下面的代码：</p>
+<pre><code>class base{
+    public:
+        int a,b;
+        virtual void f();
+};
+class base1:public virtual base{
+    public:
+        int c,d;
+        virtual void f1();
+};
+class base2：public virtual base{
+    public:
+        int e,ff;
+        virtual void f2();
+};
+class derived:public base1,public base2{
+    public:
+        int g,h;
+        virtual void f3();
+};</code></pre><p>这份代码在实际的对象继承中应该是这个样子的布局： <img src="http://i.imgur.com/P5WybyU.png" alt> 可以发现虚继承过来的基类并不像之前那样放在最上面，而且其实是放在最下面的（事实上，在g++中，表中地址从上而下是变大的）,而每一个虚表都是指向的自己的虚函数，在继承类中，如果重写了这个虚函数函数，对应的虚表中的函数也是会被改成继承类中的虚函数的。 // &lt;![CDATA[ if (typeof MathJaxListener !== ‘undefined’) { MathJax.Hub.Register.StartupHook(‘End’, function () { MathJaxListener.invokeCallbackForKey_(‘End’); }); } // ]]&gt;</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/01/29/linuxrunonbackground/" rel="next" title="Linux 技巧：让进程在后台可靠运行的几种方法">
+                <i class="fa fa-chevron-left"></i> Linux 技巧：让进程在后台可靠运行的几种方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/24/rsa-e6-95-b4-e7-90-86/" rel="prev" title="RSA整理">
+                RSA整理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xtestw</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#单个对象模型"><span class="nav-number">1.</span> <span class="nav-text">单个对象模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单继承对象模型"><span class="nav-number">2.</span> <span class="nav-text">单继承对象模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#不考虑虚函数的单继承"><span class="nav-number">2.1.</span> <span class="nav-text">不考虑虚函数的单继承</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#考虑虚函数的单继承"><span class="nav-number">2.2.</span> <span class="nav-text">考虑虚函数的单继承</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多继承对象模型"><span class="nav-number">3.</span> <span class="nav-text">多继承对象模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存在虚基类的对象模型"><span class="nav-number">4.</span> <span class="nav-text">存在虚基类的对象模型</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtestw</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在实际开发过程中，经常会发生这样的一件事，我们需要实现一系列的功能，这些功能在逻辑上是可以抽象成一样的方法，不同的实现，也就是多态，有一种解决方法是，设计一个基类，然后我们定义一些方法，然后继承这个类，设计不同的子类，不同的实现，这样子我们就可以定义基类来调用子类的方法，实现多态，这种方法一定程度上是实现了代码复用。 但是会有一个问题，假设，基类BaseClass具有一个方法，他们的子类都具有两个">
+<meta name="keywords" content="blog,java,xtestw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式-策略模式">
+<meta property="og:url" content="http://yoursite.com/2014/08/29/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-ad-96-e7-95-a5-e6-a8-a1-e5-bc-8f/index.html">
+<meta property="og:site_name" content="XtestW&#39;s Blog">
+<meta property="og:description" content="在实际开发过程中，经常会发生这样的一件事，我们需要实现一系列的功能，这些功能在逻辑上是可以抽象成一样的方法，不同的实现，也就是多态，有一种解决方法是，设计一个基类，然后我们定义一些方法，然后继承这个类，设计不同的子类，不同的实现，这样子我们就可以定义基类来调用子类的方法，实现多态，这种方法一定程度上是实现了代码复用。 但是会有一个问题，假设，基类BaseClass具有一个方法，他们的子类都具有两个">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-29T15:22:50.130Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式-策略模式">
+<meta name="twitter:description" content="在实际开发过程中，经常会发生这样的一件事，我们需要实现一系列的功能，这些功能在逻辑上是可以抽象成一样的方法，不同的实现，也就是多态，有一种解决方法是，设计一个基类，然后我们定义一些方法，然后继承这个类，设计不同的子类，不同的实现，这样子我们就可以定义基类来调用子类的方法，实现多态，这种方法一定程度上是实现了代码复用。 但是会有一个问题，假设，基类BaseClass具有一个方法，他们的子类都具有两个">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/08/29/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-ad-96-e7-95-a5-e6-a8-a1-e5-bc-8f/">
+
+
+
+
+
+  <title>设计模式-策略模式 | XtestW's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">XtestW's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/08/29/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-ad-96-e7-95-a5-e6-a8-a1-e5-bc-8f/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">设计模式-策略模式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-08-29T04:04:00+08:00">
+                2014-08-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Design-Pattern/" itemprop="url" rel="index">
+                    <span itemprop="name">Design Pattern</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在实际开发过程中，经常会发生这样的一件事，我们需要实现一系列的功能，这些功能在逻辑上是可以抽象成一样的方法，不同的实现，也就是多态，有一种解决方法是，设计一个基类，然后我们定义一些方法，然后继承这个类，设计不同的子类，不同的实现，这样子我们就可以定义基类来调用子类的方法，实现多态，这种方法一定程度上是实现了代码复用。 但是会有一个问题，假设，基类BaseClass具有一个方法，他们的子类都具有两个方法A和B，其中方法A的实现，所有的子类都一样，很明显A的实现方法是放在基类中实现的，如果B的方法每个子类的实现都不是一样的，那么毫无疑问的是我们会在每个子类中重写B的实现。这些都是显而易见的，但是某一天需求变了，BaseClass的子类childClass1，childClass2的B方法的实现是完全一样的，childClass3，childClass4的B方法的实现也是一样的，如果我们再在每个子类中实现这个方法，很明显，代码复用很不完美。也许我们会这样子解决这个问题:</p>
+<blockquote>
+<p>在现有的基类和子类中再添加一层，分别为childClass1，childClass2添加由BaseClass继承而来的一个父类，使得这两个子类从新增的这个类中继承，而他们的B方法的实现放在这个新增的类中，同样的操作对childClass3,childClass4进行。</p>
+</blockquote>
+<p>这个方法一定程度上是解决了上面的问题，但是新的问题又出现了，如果再来一个方法C，childClass2和childClass3的方法C的实现又是一样的，那又该怎么办？显然我们的设计很有问题。此时我们就需要题目中所说的设计模式—-策略模式。 策略模式的概念太过抽象，我们先看看如何解决上诉问题:</p>
+<blockquote>
+<p>我们通过接口来解决这些变化的方法，我们针对可能会变化的B,C两个方法分别定义一个接口interfaceB，interfaceC,针对childClass1,childClass2我们定义一个类classB1用他们的方法B来实现interfaceB，同理我们生成classB2,classC1,classC2,classC3分别对应不同的方法B和C的实现，这样子，我们只要在基类中定义一个B，C类型为interfaceB，interfaceC的方法引用变量和两个引用对应的setter方法，就可以在子类的构造函数中通过setter方法定制属于自已的方法B,C了，从而很好的实现了代码复用的同时，降低了耦合性，增强了可扩展性。</p>
+</blockquote>
+<p>我们将这种方法B和C称为策略，那么我们的策略模式，就是针对每一类方法我们定义一套策略，这一套策略是对一类方法的不同实现，他们之间可以互相替换，这种方法可以让算法的变化独立在了使用算法的客户。 这一章里面，也抽象出了下面的3种设计原则：</p>
+<blockquote>
+<p><strong>1、封装变化 2、多用组合，少用继承 3、针对接口编程，不针对实现编程</strong></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/08/27/mfc-e5-af-b9-e8-af-9d-e6-a1-86-e5-8a-a8-e6-80-81-e5-88-9b-e5-bb-ba-e7-ae-80-e5-8d-95-e7-9a-84gridctrl-e6-8e-a7-e4-bb-b6/" rel="next" title="MFC 对话框动态创建简单的GridCtrl控件">
+                <i class="fa fa-chevron-left"></i> MFC 对话框动态创建简单的GridCtrl控件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/08/30/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-a7-82-e5-af-9f-e8-80-85-e6-a8-a1-e5-bc-8f/" rel="prev" title="设计模式-观察者模式">
+                设计模式-观察者模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xtestw</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtestw</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

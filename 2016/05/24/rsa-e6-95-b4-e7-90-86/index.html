@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="RSA,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近的论文用到了RSA相关的东西，做一个整理。  RSA 流程图 选取2个质数p、q 计算n = p * q 计算欧拉函数 φ(n) 选择加密密钥 e 计算解密密钥 d 加密解密    流程图 密钥生成过程：  加密解密过程：   选取2个质数p、q\(RSA\)算法的主要就是基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。 同时为了增强强度，\(p-">
+<meta name="keywords" content="RSA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RSA整理">
+<meta property="og:url" content="http://yoursite.com/2016/05/24/rsa-e6-95-b4-e7-90-86/index.html">
+<meta property="og:site_name" content="XtestW&#39;s Blog">
+<meta property="og:description" content="最近的论文用到了RSA相关的东西，做一个整理。  RSA 流程图 选取2个质数p、q 计算n = p * q 计算欧拉函数 φ(n) 选择加密密钥 e 计算解密密钥 d 加密解密    流程图 密钥生成过程：  加密解密过程：   选取2个质数p、q\(RSA\)算法的主要就是基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。 同时为了增强强度，\(p-">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://imgdata.hoop8.com/1605/3863736210165.png">
+<meta property="og:image" content="http://imgdata.hoop8.com/1605/1503736210165.png">
+<meta property="og:updated_time" content="2019-07-29T15:22:50.131Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="RSA整理">
+<meta name="twitter:description" content="最近的论文用到了RSA相关的东西，做一个整理。  RSA 流程图 选取2个质数p、q 计算n = p * q 计算欧拉函数 φ(n) 选择加密密钥 e 计算解密密钥 d 加密解密    流程图 密钥生成过程：  加密解密过程：   选取2个质数p、q\(RSA\)算法的主要就是基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。 同时为了增强强度，\(p-">
+<meta name="twitter:image" content="http://imgdata.hoop8.com/1605/3863736210165.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/24/rsa-e6-95-b4-e7-90-86/">
+
+
+
+
+
+  <title>RSA整理 | XtestW's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">XtestW's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/24/rsa-e6-95-b4-e7-90-86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">RSA整理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-05-24T23:17:24+08:00">
+                2016-05-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Theory/" itemprop="url" rel="index">
+                    <span itemprop="name">Theory</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近的论文用到了RSA相关的东西，做一个整理。</p>
+<ul>
+<li><a href="#toc_0">RSA</a><ul>
+<li><a href="#toc_1">流程图</a></li>
+<li><a href="#toc_2">选取2个质数p、q</a></li>
+<li><a href="#toc_3">计算n = p * q</a></li>
+<li><a href="#toc_4">计算欧拉函数 φ(n)</a></li>
+<li><a href="#toc_5">选择加密密钥 e</a></li>
+<li><a href="#toc_6">计算解密密钥 d</a></li>
+<li><a href="#toc_7">加密解密</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><ul>
+<li>密钥生成过程： <img src="http://imgdata.hoop8.com/1605/3863736210165.png" alt="RSA"></li>
+<li>加密解密过程： <img src="http://imgdata.hoop8.com/1605/1503736210165.png" alt="RSA"></li>
+</ul>
+<h2 id="选取2个质数p、q"><a href="#选取2个质数p、q" class="headerlink" title="选取2个质数p、q"></a>选取2个质数p、q</h2><p>\(RSA\)算法的主要就是基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。 同时为了增强强度，\(p-1\)和\(q-1\)的最大公因子要小 质数的选取方法：</p>
+<ul>
+<li>随机搜索法随机产生一个奇数 \(p_1\) 进行素数测试,若是素数,则结束;否则,重新随机产生一个奇数 \(p_2\) 进行素性测试,直至找到一个素数 \(p_t\)。</li>
+<li>随机递增搜索法随机产生一个奇数,对以该数为起点的奇数依次进行测试,直至找到一个素数。这种方法相对于随机搜索法，在速度上有一定的提高，但是并没有本质上的区别</li>
+</ul>
+<p>设:</p>
+<p>\(p=61,q=53\)</p>
+<h2 id="计算n-p-q"><a href="#计算n-p-q" class="headerlink" title="计算n = p * q"></a>计算n = p * q</h2><p>\(n\)是公钥对，密钥对都需要的一个值，为提高保密强度，RSA密钥至少为500位长，一般推荐使用1024位，也有2048位的。</p>
+<p>\( n = p*q=61*53 = 3233 \)</p>
+<p>这个部分是可以直接求解的。</p>
+<h2 id="计算欧拉函数-ϕ-n"><a href="#计算欧拉函数-ϕ-n" class="headerlink" title="计算欧拉函数 ϕ(n)"></a>计算欧拉函数 ϕ(n)</h2><p>\( \phi(n) = (p-1)(q-1) = 60*52 = 3120 \)</p>
+<h2 id="选择加密密钥-e"><a href="#选择加密密钥-e" class="headerlink" title="选择加密密钥 e"></a>选择加密密钥 e</h2><p>加密密钥 \(e\) 需要满足以下条件：</p>
+<p>\(1 &lt; e &lt; \phi(n), gcd(e, \phi(n)) = 1\)</p>
+<p>这个条件是为了确保\(e\)在模\(\phi(n)\)的情况下有逆元。出于安全性考虑 \(e=2\) 永远不该被使用 一般生成这种\(e\)的方法有2种：</p>
+<ul>
+<li>随机生成法</li>
+<li>穷举法</li>
+</ul>
+<p>我们令</p>
+<p>\(e = 17 \)</p>
+<p>即我们得到公钥对：</p>
+<p>\(PU\ = \ \{\ e,n\ \} = \{\ 17,3233\ \} \)</p>
+<h2 id="计算解密密钥-d"><a href="#计算解密密钥-d" class="headerlink" title="计算解密密钥 d"></a>计算解密密钥 d</h2><p>解密密钥 \(d\) 需要满足：</p>
+<p>\(d \equiv\) \(e\)-1 \( \ \ (\ mod\ \phi(n) \ )\)</p>
+<p>其实求的就是\(e\)的逆元，求逆元的方法有3种：</p>
+<ul>
+<li><p>循环求解法枚举所有的数，来求解\(e\)的逆元</p>
+</li>
+<li><p>扩展欧几里</p>
+<blockquote>
+<p>扩展欧几里得算法可以在求得a、b的最大公约数的同时，能找到整数\(x、y\)（其中一个很可能是负数），使它们满足贝祖等式\(ax + by = gcd(a, b)\)。</p>
+</blockquote>
+</li>
+</ul>
+<p>当\(gcd(a, b)=1\),那么\((ax + by = 1)\),此时可以看出\(m\)是\(a\)模\(b\)的乘法逆元，\(n\)是\(b\)模\(a\)的乘法逆元。</p>
+<blockquote>
+<p>扩展欧几里德计算过程：</p>
+<p>\(a = q_1b + r_1 \ \ \ r_1 = ax_1+by_1\)</p>
+<p>\(b = q_2r_1 + r_2 \ \ \ r_2 = ax_2+by_2\)</p>
+<p>\(r_1 = q_3b + r_3 \ \ \ r_3 = ax_3+by_3\)</p>
+<p>…</p>
+<p>\(r_{n-2}= q_nr_{n-1} + r_n \ \ \ r_n = ax_n+by_n\)</p>
+<p>\(r_{n-1}= q_{n+1}r_{n} + 0 \)</p>
+<p>通过移项，得到：</p>
+<p>\(r_i = r_{i-2}-r_{i-1}q_i\)</p>
+<p>同样，从i-1和i-2行，也可以得到:</p>
+<p>\(r_{i-2} = ax_{i-2}+by_{i-2}\ \ \ \ \ r_{i-1}=ax_{i-1}+by_{i-1}\)</p>
+<p>代入：</p>
+<p>\(r_i =a(x_{i-2} - q_ix_{i-1})+b(y_{i-2}-q_iy_{i-1})\)</p>
+<p>因为我们已经假设\(r_i=ax_i+by_i\),因此</p>
+<p>\(x_i =x_{i-2} - q_ix_{i-1}\ \ \ \ \ y_i=y_{i-2} - q_iy_{i-1}\)</p>
+<p>#include <iostream> </iostream></p>
+<p>#include <cstdio></cstdio></p>
+<p>#define LL __int64<br>using namespace std;<br>LL extend_gcd(LL a, LL b, LL &amp;x, LL &amp;y)//ax+by=1返回a,b的gcd<br>{<br>    LL ans, t;<br>    if(b == 0)<br>    {<br>        x = 1;<br>        y = 0;<br>        return a;<br>    }<br>    ans = extend_gcd(b, a%b, x, y);<br>    t = x;<br>    x = y;<br>    y = t - ( a / b ) * y;<br>    return ans;<br>}<br>int main()<br>{<br>    LL a, b, c, x, y;<br>    while(~scanf(“%I64d%I64d%I64d”, &amp;a, &amp;b, &amp;c))//ax+by = c<br>    {<br>        LL gcd = extend_gcd(a,b,x,y);<br>        while(x &lt; 0)//x 为正<br>            x += b,y -= a;<br>        printf(“ax+by = 1的最小正整数解:%I64d %I64d\n”, x, y);//ax+by = 1<br>        //x即为a%b的逆元，y为b%a的逆元<br>        printf(“a mod b的逆元:%I64d\n”, x);<br>        if(c % gcd)<br>        {<br>            printf(“无解！\n”);<br>            continue;<br>        }//ax+by = c<br>        printf(“x=%I64d,y=%I64d\n”, x*c/gcd, y*c/gcd);<br>    }<br>    return 0;<br>}</p>
+</blockquote>
+<ul>
+<li><p>费马小定理成立的前提是\(\phi(n)\)为质数，否则无法使用。 假如\(a\)是整数，\(p\)是质数，且\(a,p\)互质(即两者只有一个公约数1)，那么\(a\)的\((p-1)\)次方除以\(p\)的余数恒等于1。那么逆元为</p>
+<p>\(a\)\(m-2\)\(\ mod\ m \)</p>
+</li>
+</ul>
+<p>利用扩展欧几里得算法可以求得：</p>
+<p>\(d=2753\)</p>
+<p>即我们得到密钥对：</p>
+<p>\(PR\ =\ \{\ d,n\ \} = \{\ 2753,3233\ \}\)</p>
+<h2 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h2><ul>
+<li><p>加密</p>
+<p>\(C = M^e\ (\ mod\ n\ )\)</p>
+</li>
+</ul>
+<p>假设对65加密,即\(M=65\)则：</p>
+<p>\(C=65\)17 \(mod \ 3233 = 2790\)</p>
+<ul>
+<li><p>解密</p>
+<p>\(M = C^d\ (\ mod\ n\ )\)</p>
+</li>
+</ul>
+<p>针对密文\(C=2790\)的情况，我们进行解密：</p>
+<p>\(M = 2790\)2753 \(\ mod\ 3233 = 65.\)</p>
+<blockquote>
+<p>求高次幂的快速幂算法: 比如求解：</p>
+<p>\(a^b\ mod\ n\)</p>
+<p>把b转换成二进制数,该二进制数第\(i\)位的权为 2\(i\)-1 例如, \(b=11\)的二进制是1011</p>
+<p>11 = 23 ×1 + 22 ×0 + 21 ×1 + 20 ×1</p>
+<p>因此，我们将\(a\)11 转化为算</p>
+<p>\( a\)11 =\(a\)20 <em>\(a\)21 \</em> \(a\)23</p>
+<p>int modexp(int a,int b,int n)<br>{<br>    int ret=1;<br>    while(b)<br>    {<br>       if(b&amp;1) ret=ret<em>a%n;<br>       a=a</em>a%n;<br>       b&gt;&gt;=1;<br>    }<br>    return ret;<br>}</p>
+</blockquote>
+<p>// &lt;![CDATA[ if (typeof MathJaxListener !== ‘undefined’) { MathJax.Hub.Register.StartupHook(‘End’, function () { MathJaxListener.invokeCallbackForKey_(‘End’); }); } // ]]&gt;</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/RSA/" rel="tag"># RSA</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/05/cplusplusobjectmodel/" rel="next" title="c++对象模型">
+                <i class="fa fa-chevron-left"></i> c++对象模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/23/sdk-e7-af-a1-e6-94-b9/" rel="prev" title="sdk篡改">
+                sdk篡改 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xtestw</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#流程图"><span class="nav-number">1.</span> <span class="nav-text">流程图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选取2个质数p、q"><span class="nav-number">2.</span> <span class="nav-text">选取2个质数p、q</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算n-p-q"><span class="nav-number">3.</span> <span class="nav-text">计算n = p * q</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算欧拉函数-ϕ-n"><span class="nav-number">4.</span> <span class="nav-text">计算欧拉函数 ϕ(n)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择加密密钥-e"><span class="nav-number">5.</span> <span class="nav-text">选择加密密钥 e</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#计算解密密钥-d"><span class="nav-number">6.</span> <span class="nav-text">计算解密密钥 d</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加密解密"><span class="nav-number">7.</span> <span class="nav-text">加密解密</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtestw</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1.下载安装GridCtrl===&amp;gt;http://www.codeproject.com/Articles/8/MFC-Grid-control 在对应项目里面添加GridCtrl的所有.h和cpp的文件(GridCtrl_src和NewCellTypes两个文件夹下的文件) 在vs2010中可能会出现CMemDC重定义的错误，只要将CMemDC这个重命名为CGridMemDC（或者其他你想">
+<meta name="keywords" content="blog,java,xtestw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MFC 对话框动态创建简单的GridCtrl控件">
+<meta property="og:url" content="http://yoursite.com/2014/08/27/mfc-e5-af-b9-e8-af-9d-e6-a1-86-e5-8a-a8-e6-80-81-e5-88-9b-e5-bb-ba-e7-ae-80-e5-8d-95-e7-9a-84gridctrl-e6-8e-a7-e4-bb-b6/index.html">
+<meta property="og:site_name" content="XtestW&#39;s Blog">
+<meta property="og:description" content="1.下载安装GridCtrl===&amp;gt;http://www.codeproject.com/Articles/8/MFC-Grid-control 在对应项目里面添加GridCtrl的所有.h和cpp的文件(GridCtrl_src和NewCellTypes两个文件夹下的文件) 在vs2010中可能会出现CMemDC重定义的错误，只要将CMemDC这个重命名为CGridMemDC（或者其他你想">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-29T15:22:50.130Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MFC 对话框动态创建简单的GridCtrl控件">
+<meta name="twitter:description" content="1.下载安装GridCtrl===&amp;gt;http://www.codeproject.com/Articles/8/MFC-Grid-control 在对应项目里面添加GridCtrl的所有.h和cpp的文件(GridCtrl_src和NewCellTypes两个文件夹下的文件) 在vs2010中可能会出现CMemDC重定义的错误，只要将CMemDC这个重命名为CGridMemDC（或者其他你想">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/08/27/mfc-e5-af-b9-e8-af-9d-e6-a1-86-e5-8a-a8-e6-80-81-e5-88-9b-e5-bb-ba-e7-ae-80-e5-8d-95-e7-9a-84gridctrl-e6-8e-a7-e4-bb-b6/">
+
+
+
+
+
+  <title>MFC 对话框动态创建简单的GridCtrl控件 | XtestW's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">XtestW's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/08/27/mfc-e5-af-b9-e8-af-9d-e6-a1-86-e5-8a-a8-e6-80-81-e5-88-9b-e5-bb-ba-e7-ae-80-e5-8d-95-e7-9a-84gridctrl-e6-8e-a7-e4-bb-b6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MFC 对话框动态创建简单的GridCtrl控件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-08-27T14:26:00+08:00">
+                2014-08-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>1.下载安装GridCtrl===&gt;<a href="http://www.codeproject.com/Articles/8/MFC-Grid-control" title="http://www.codeproject.com/Articles/8/MFC-Grid-control" target="_blank" rel="noopener">http://www.codeproject.com/Articles/8/MFC-Grid-control</a> 在对应项目里面添加GridCtrl的所有.h和cpp的文件(GridCtrl_src和NewCellTypes两个文件夹下的文件) 在vs2010中可能会出现CMemDC重定义的错误，只要将CMemDC这个重命名为CGridMemDC（或者其他你想要的名字，同时将这个库中的其他引用CMemDC这个类的地方的名称一起改过来） 2.在对话框中添加GridCtrl的成员变量 定义:</p>
+<p>CGridCtrl* m_pGrid;</p>
+<p>构造函数中初始化:  </p>
+<p>m_pGrid=NULL;</p>
+<p>析构函数中销毁  </p>
+<p>if (m_pGrid)<br>{<br>    delete m_pGrid;<br>    m_pGrid=NULL;<br>}</p>
+<p>3.在对话框中画出m_pGrid控件</p>
+<p>CRect rect;<br>this-&gt;GetWindowRect(rect);<br>GetClientRect(rect);<br>m_pGrid=new CGridCtrl();<br>m_pGrid-&gt;Create(CRect(rect.TopLeft().x,rect.BottomRight().y-100,rect.Width(),rect.BottomRight().y),this,1000);</p>
+<p>其中Create的第一个参数是这个控件在对话框中的位置（我这里是在对话框底部高为100的区域），第二个参数是父窗口句柄，第三个是你分配给他的ID。 这个创建过程，可以根据需求在不同的函数中实现。 这一过程结束之后我们就有了一个空白的GridCtrl控件显示在对话框中了。 4.构建简单的表格</p>
+<p>m_pGrid-&gt;SetEditable(true);//默认就是可以编辑的<br>// m_pGrid-&gt;SetTextBkColor(RGB(0xFF, 0xFF, 0xE0));//设置表格内容是黄色背景<br>m_pGrid-&gt;SetRowCount(8); //初始为8行，包含表头<br>m_pGrid-&gt;SetColumnCount(8); //初始化为8列<br>m_pGrid-&gt;SetFixedRowCount(1); //表头为一行<br>m_pGrid-&gt;SetFixedColumnCount(1); //表头为一列</p>
+<p>这一步结束之后就是一个8*8的表格，但是表格和表头都还没有内容是空白的 5.操作单元格 可以直接设置对应的单元格的内容</p>
+<p>m_pGrid-&gt;SetItemText(row,col,content);</p>
+<p>也可以通过下面方式来设置</p>
+<p>GV_ITEM Item;<br>Item.mask = GVIF_TEXT;<br>Item.row = row;<br>Item.col = col;<br>Item.strText = “content”;<br>m_Grid.SetItem(&amp;Item);</p>
+<p>其中mask表明的是能够访问的单元格的内容，比如我这个地方设置成了GVIF_IMAGE，那么运行结果出来之后在对应的单元格中是看不到content的，而且程序中通过GetItemText()的方法也访问不了(其实就是这个单元格的类型，通过虽然赋值没有报错，但是即便重新设置了mask的值为GVIF_IMAGE,也获取不到之前的赋值)。 mask的类型有下面几种：</p>
+<p>GVIF_TEXT      // Cell text will be accessed<br>GVIF_IMAGE     // Cell image number will be accessed<br>GVIF_PARAM     // Cell user data (lParam) will be accessed<br>GVIF_STATE     // Cell state will be accessed<br>GVIF_BKCLR     // Cell background colour will be accessed<br>GVIF_FGCLR     // Cell foreground colour will be accessed<br>GVIF_FORMAT    // Cell format field will be accessed<br>GVIF_FONT      // Cell logical font will be accessed<br>GVIF_MARGIN    // Cell margin information will be accessed<br>GVIF_ALL       // All information will be accessed</p>
+<p>到此一个简单的GridCtrl的创建就完成了。 6.添加消息响应函数 以添加完成编辑触发的事件处理函数为例，首先在.h文件中声明消息处理函数:</p>
+<p>afx_msg void OnGridEndEdit(NMHDR *pNotifyStruct, LRESULT* pResult);</p>
+<p>然后到对应的cpp文件中BEGIN_MESSAGE_MAP和END_MESSAGE_MAP之间添加消息响应映射:</p>
+<p>ON_NOTIFY(GVN_ENDLABELEDIT, IDC_GRID, OnGridEndEdit)</p>
+<p>其中第一个参数是消息，第二个是GRID创建时候的ID，第三个参数就是对应的消息处理函数 最后在cpp中编写对应的响应函数:</p>
+<p>void C3TranformerAttr::OnGridEndEdit(NMHDR *pNotifyStruct, LRESULT* pResult){<br>     NM_GRIDVIEW* pItem = (NM_GRIDVIEW*) pNotifyStruct;<br>     pItem-&gt;iColumn;<br>     pItem-&gt;iRow;<br>}</p>
+<p>在这个函数中可以获得相应的行号和列号，从而进行各种操作。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/07/08/e6-af-8d-e5-87-bd-e6-95-b0/" rel="next" title="母函数">
+                <i class="fa fa-chevron-left"></i> 母函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/08/29/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-ad-96-e7-95-a5-e6-a8-a1-e5-bc-8f/" rel="prev" title="设计模式-策略模式">
+                设计模式-策略模式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xtestw</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtestw</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

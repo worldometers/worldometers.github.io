@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="使用Invalidate（true），即使在OnDraw中使用了双缓冲，也会出现闪屏问题，下面的解决方案转载自：http://blog.sina.com.cn/s/blog_60fa20600100igh6.html   在使用Invalidate(TRUE)进行窗口重绘时，总是会遇到闪屏的问题。 一开始以为是绘图速度过慢照成的，但在对绘图时间做了一个测试之后发现，即使整个绘图过程只持续了几个毫秒">
+<meta name="keywords" content="blog,java,xtestw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MFC Invalidate闪屏问题">
+<meta property="og:url" content="http://yoursite.com/2014/06/22/mfcinvalidate-e9-97-aa-e5-b1-8f-e9-97-ae-e9-a2-98/index.html">
+<meta property="og:site_name" content="XtestW&#39;s Blog">
+<meta property="og:description" content="使用Invalidate（true），即使在OnDraw中使用了双缓冲，也会出现闪屏问题，下面的解决方案转载自：http://blog.sina.com.cn/s/blog_60fa20600100igh6.html   在使用Invalidate(TRUE)进行窗口重绘时，总是会遇到闪屏的问题。 一开始以为是绘图速度过慢照成的，但在对绘图时间做了一个测试之后发现，即使整个绘图过程只持续了几个毫秒">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-29T15:22:50.130Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MFC Invalidate闪屏问题">
+<meta name="twitter:description" content="使用Invalidate（true），即使在OnDraw中使用了双缓冲，也会出现闪屏问题，下面的解决方案转载自：http://blog.sina.com.cn/s/blog_60fa20600100igh6.html   在使用Invalidate(TRUE)进行窗口重绘时，总是会遇到闪屏的问题。 一开始以为是绘图速度过慢照成的，但在对绘图时间做了一个测试之后发现，即使整个绘图过程只持续了几个毫秒">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2014/06/22/mfcinvalidate-e9-97-aa-e5-b1-8f-e9-97-ae-e9-a2-98/">
+
+
+
+
+
+  <title>MFC Invalidate闪屏问题 | XtestW's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">XtestW's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/06/22/mfcinvalidate-e9-97-aa-e5-b1-8f-e9-97-ae-e9-a2-98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MFC Invalidate闪屏问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-06-22T05:11:00+08:00">
+                2014-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/C/" itemprop="url" rel="index">
+                    <span itemprop="name">C++</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>使用Invalidate（true），即使在OnDraw中使用了双缓冲，也会出现闪屏问题，下面的解决方案转载自：<a href="http://blog.sina.com.cn/s/blog_60fa20600100igh6.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_60fa20600100igh6.html</a>   在使用<strong>Invalidate(TRUE)</strong>进行窗口重绘时，总是会遇到闪屏的问题。 一开始以为是绘图速度过慢照成的，但在对绘图时间做了一个测试之后发现，<strong>即使整个绘图过程只持续了几个毫秒，还是会看见很明显的闪烁**</strong>，所以时间并不是造成闪烁的决定性因素<strong>。 那到底是什么原因呢？现在来看看Invalidate(TRUE)都干了些什么。其实，它只是间接向消息队列添加了</strong>WM_ERASEBKGND<strong>和WM_PAINT两个消息。但是，如果使用Invalidate(FALSE)的话，则只有WM_PAINT消息产生，这时是不会有任何闪烁的。 现在看来，闪烁似乎是由WM_ERASEBKGND消息产生的，事实上，的确与它有关。那WM_ERASEBKGND有干了什么呢？WM_ERASEBKGND消息由OnEraseBkgnd()消息处理函数响应，它的作用就是</strong>重绘客户区背景<strong>。我们可以通过向工程里添加WM_ERASEBKGND这个消息，然后在重写的消息处理函数中将返回语句修改为</strong>return TRUE<strong>来屏蔽这一功能，这样做的好处是这时不会重绘背景了，坏处是这时背景也不会被擦出来。 好像还没有说到真实原因，其实真正的原因就隐含在其中。现在来做一个实验，分别尝试一下快速的眨眼和慢速的眨眼，你会发现快速眨眼时我们会感觉眼前的黑色一闪而过，而慢速眨眼时，则会觉得整个过程是连续的，没有什么异样。其实闪烁也就是这么回事，即</strong>多张不连续图像的快速切换<strong>。这里有三个条件，</strong>多张和快速和不连续<strong>，而且需要</strong>同时具备<strong>才会发生闪烁。如果只是两张，只会感觉到突变，还谈不上闪烁；如果频率慢的话，也相当于两张图像的情况了；最后如果是连续图像的话，那就像是看电影，平稳的过渡也不会让人觉得不适。 知道了这些，接下来就可以做决策了。 **解决方案</strong>： 使用Invalidate(FALSE),添加WM_ERASEBKGND消息处理函数或者局部刷新三者选其一，都是可以解决问题的。它们的都是通过除去图像不连续这一因素来达到目的的。   另外，要说的是GDI的BitBlt()函数是及其高效的，一次操作所需要的时间只有几到十几个微秒，所以我们可以放心的使用它，而不用担心任何效率问题。不过相对于BitBlt()来说StretchBlt()就要慢的多，大概是几十倍的差别。 还有就是一般的绘图工作都是先绘制在一个缓冲区上，然后再一次拷贝到屏幕上。 有时，当我们需要利用闪烁的效果的话，也是可以通过多张图像的快速切换来做到，在这里我们也将两张图像的重复切换理解为多张图像。   我自己则是通过下面代码进行解决的：</p>
+<p>BOOL CDQView::OnEraseBkgnd(CDC* pDC)<br>{<br>    // TODO: 在此添加消息处理程序代码和/或调用默认值<br>    return false;<br>    //return CView::OnEraseBkgnd(pDC);<br>}</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2014/06/09/millar-rabin-e5-92-8cpollard-rho/" rel="next" title="Millar_rabin和Pollard_Rho">
+                <i class="fa fa-chevron-left"></i> Millar_rabin和Pollard_Rho
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2014/07/07/ac-e8-87-aa-e5-8a-a8-e6-9c-ba/" rel="prev" title="AC 自动机">
+                AC 自动机 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xtestw</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtestw</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

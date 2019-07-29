@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="1、assigned主键由外部程序负责生成，在 save() 之前必须指定一个。Hibernate不负责维护主键生成。与Hibernate和底层数据库都无关，可以跨数据库。在存储对象前，必须要使用主键的setter方法给主键赋值，至于这个值怎么生成，完全由自己决定，这种方法应该尽量避免。 &amp;lt;generator** class=”assigned” /&amp;gt;** “ud”是自定义的策略名，人">
+<meta name="keywords" content="blog,java,xtestw">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hibernate ID 生成方式">
+<meta property="og:url" content="http://yoursite.com/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/index.html">
+<meta property="og:site_name" content="XtestW&#39;s Blog">
+<meta property="og:description" content="1、assigned主键由外部程序负责生成，在 save() 之前必须指定一个。Hibernate不负责维护主键生成。与Hibernate和底层数据库都无关，可以跨数据库。在存储对象前，必须要使用主键的setter方法给主键赋值，至于这个值怎么生成，完全由自己决定，这种方法应该尽量避免。 &amp;lt;generator** class=”assigned” /&amp;gt;** “ud”是自定义的策略名，人">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-07-29T15:22:50.131Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="hibernate ID 生成方式">
+<meta name="twitter:description" content="1、assigned主键由外部程序负责生成，在 save() 之前必须指定一个。Hibernate不负责维护主键生成。与Hibernate和底层数据库都无关，可以跨数据库。在存储对象前，必须要使用主键的setter方法给主键赋值，至于这个值怎么生成，完全由自己决定，这种方法应该尽量避免。 &amp;lt;generator** class=”assigned” /&amp;gt;** “ud”是自定义的策略名，人">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/">
+
+
+
+
+
+  <title>hibernate ID 生成方式 | XtestW's Blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">XtestW's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">hibernate ID 生成方式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2015-02-10T13:08:00+08:00">
+                2015-02-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JAVA/" itemprop="url" rel="index">
+                    <span itemprop="name">JAVA</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="1、assigned"><a href="#1、assigned" class="headerlink" title="1、assigned"></a>1、assigned</h1><p>主键由外部程序负责生成，在 save() 之前必须指定一个。Hibernate不负责维护主键生成。与Hibernate和底层数据库都无关，可以跨数据库。在存储对象前，必须要使用主键的setter方法给主键赋值，至于这个值怎么生成，完全由自己决定，这种方法应该尽量避免。</p>
+<p><strong>&lt;</strong>generator** class=”assigned” /&gt;**</p>
+<p>“ud”是自定义的策略名，人为起的名字，后面均用“ud”表示。 <strong>特点：可以跨数据库，人为控制主键生成，应尽量避免。</strong></p>
+<h1 id="2、increment"><a href="#2、increment" class="headerlink" title="2、increment"></a>2、increment</h1><p>由Hibernate从数据库中取出主键的最大值（每个session只取1次），以该值为基础，每次增量为1，在内存中生成主键，不依赖于底层的数据库，因此可以跨数据库。</p>
+<p>Hibernate调用org.hibernate.id.IncrementGenerator类里面的generate()方法，使用select max(idColumnName) from tableName语句获取主键最大值。该方法被声明成了synchronized，所以在一个独立的Java虚拟机内部是没有问题的，然而，在多个JVM同时并发访问数据库select max时就可能取出相同的值，再insert就会发生Dumplicate entry的错误。所以只能有一个Hibernate应用进程访问数据库，否则就可能产生主键冲突，所以不适合多进程并发更新数据库，适合单一进程访问数据库，不能用于群集环境。 官方文档：只有在没有其他进程往同一张表中插入数据时才能使用，在集群下不要使用。 <strong>特点：跨数据库，不适合多进程并发更新数据库，适合单一进程访问数据库，不能用于群集环境。</strong></p>
+<h1 id="3、hilo"><a href="#3、hilo" class="headerlink" title="3、hilo"></a>3、hilo</h1><p>hilo（高低位方式high low）是hibernate中最常用的一种生成方式，需要一张额外的表保存hi的值。保存hi值的表至少有一条记录（只与第一条记录有关），否则会出现错误。<strong>可以跨数据库。</strong></p>
+<p><strong>hibernate_hilo</strong></p>
+<p><strong>next_hi</strong></p>
+<p><strong>100</strong></p>
+<p><strong>hibernate_hilo **</strong>指定保存hi值的表名** <strong>next_hi **</strong>指定保存hi值的列名** <strong>100 **</strong>指定低位的最大值** 也可以省略table和column配置，其默认的表为hibernate_unique_key，列为next_hi</p>
+<p><strong>100</strong></p>
+<p>hilo生成器生成主键的过程（以hibernate_unique_key表，next_hi列为例）： 1. 获得hi值：读取并记录数据库的hibernate_unique_key表中next_hi字段的值，数据库中此字段值加1保存。 2. 获得lo值：从0到max_lo循环取值，差值为1，当值为max_lo值时，重新获取hi值，然后lo值继续从0到max_lo循环。 3. 根据公式 hi * (max_lo + 1) + lo计算生成主键值。 注意：当hi值是0的时候，那么第一个值不是0<em>(max_lo+1)+0=0，而是lo跳过0从1开始，直接是1、2、3…… 那max_lo配置多大合适呢？ 这要根据具体情况而定，如果系统一般不重启，而且需要用此表建立大量的主键，可以吧max_lo配置大一点，这样可以减少读取数据表的次数，提高效率；反之，如果服务器经常重启，可以吧max_lo配置小一点，可以避免每次重启主键之间的间隔太大，造成主键值主键不连贯。 *</em>特点：跨数据库，hilo算法生成的标志只能在一个数据库中保证唯一。**</p>
+<h1 id="4、seqhilo"><a href="#4、seqhilo" class="headerlink" title="4、seqhilo"></a>4、seqhilo</h1><p>与hilo类似，通过hi/lo算法实现的主键生成机制，只是将hilo中的数据表换成了序列sequence，需要数据库中先创建sequence，适用于支持sequence的数据库，如Oracle。</p>
+<p><strong>hibernate_seq</strong></p>
+<p><strong>100</strong></p>
+<p><strong>特点：与hilo类似，只能在支持序列的数据库中使用。</strong></p>
+<h1 id="5、sequence"><a href="#5、sequence" class="headerlink" title="5、sequence"></a>5、sequence</h1><p>采用数据库提供的sequence机制生成主键，需要数据库支持sequence。如oralce、DB、SAP DB、PostgerSQL、McKoi中的sequence。MySQL这种不支持sequence的数据库则不行（可以使用identity）。</p>
+<p><strong>hibernate_id</strong> </p>
+<p><strong>hibernate_id</strong> <strong>指定sequence的名称</strong> Hibernate生成主键时，查找sequence并赋给主键值，主键值由数据库生成，Hibernate不负责维护，使用时必须先创建一个sequence，如果不指定sequence名称，则使用Hibernate默认的sequence，名称为hibernate_sequence，前提要在数据库中创建该sequence。 <strong>特点：只能在支持序列的数据库中使用，如Oracle。</strong></p>
+<h1 id="6、identity"><a href="#6、identity" class="headerlink" title="6、identity"></a>6、identity</h1><p>identity由底层数据库生成标识符。identity是由数据库自己生成的，但这个主键必须设置为自增长，使用identity的前提条件是底层数据库支持自动增长字段类型，如DB2、SQL Server、MySQL、Sybase和HypersonicSQL等，Oracle这类没有自增字段的则不支持。</p>
+<p>例：如果使用MySQL数据库，则主键字段必须设置成auto_increment。 id int(11) primary key auto_increment <strong>特点：只能用在支持自动增长的字段数据库中使用，如MySQL。</strong></p>
+<h1 id="7、native"><a href="#7、native" class="headerlink" title="7、native"></a>7、native</h1><p>native由hibernate根据使用的数据库自行判断采用identity、hilo、sequence其中一种作为主键生成方式，灵活性很强。如果能支持identity则使用identity，如果支持sequence则使用sequence。</p>
+<p>例如MySQL使用identity，Oracle使用sequence 注意：如果Hibernate自动选择sequence或者hilo，则所有的表的主键都会从Hibernate默认的sequence或hilo表中取。并且，有的数据库对于默认情况主键生成测试的支持，效率并不是很高。 使用sequence或hilo时，可以加入参数，指定sequence名称或hi值表名称等，如 <strong>hibernate_id</strong> <strong>特点：根据数据库自动选择，项目中如果用到多个数据库时，可以使用这种方式，使用时需要设置表的自增字段或建立序列，建立表等。</strong></p>
+<h1 id="8、uuid"><a href="#8、uuid" class="headerlink" title="8、uuid"></a>8、uuid</h1><p>UUID：Universally Unique Identifier，是指在一台机器上生成的数字，它保证对在同一时空中的所有机器都是唯一的。按照开放软件基金会(OSF)制定的标准计算，用到了以太网卡地址、纳秒级时间、芯片ID码和许多可能的数字，标准的UUID格式为： <strong>xxxxxxxx-xxxx-xxxx-xxxxxx-xxxxxxxxxx (8-4-4-4-12)</strong> 其中每个 <strong>x</strong> 是 0-9 或 a-f 范围内的一个十六进制的数字。</p>
+<p>Hibernate在保存对象时，生成一个UUID字符串作为主键，保证了唯一性，但其并无任何业务逻辑意义，只能作为主键，唯一缺点长度较大，32位（Hibernate将UUID中间的“-”删除了）的字符串，占用存储空间大，但是有两个很重要的优点，Hibernate在维护主键时，不用去数据库查询，从而提高效率，而且它是跨数据库的，以后切换数据库极其方便。 <strong>特点：uuid长度大，占用空间大，跨数据库，不用访问数据库就生成主键值，所以效率高且能保证唯一性，移植非常方便，推荐使用。</strong></p>
+<h1 id="9、guid"><a href="#9、guid" class="headerlink" title="9、guid"></a>9、guid</h1><p>GUID：Globally Unique Identifier全球唯一标识符，也称作 UUID，是一个128位长的数字，用16进制表示。算法的核心思想是结合机器的网卡、当地时间、一个随即数来生成GUID。从理论上讲，如果一台机器每秒产生10000000个GUID，则可以保证（概率意义上）3240年不重复。</p>
+<p>Hibernate在维护主键时，先查询数据库，获得一个uuid字符串，该字符串就是主键值，该值唯一，缺点长度较大，支持数据库有限，优点同uuid，跨数据库，但是仍然需要访问数据库。 <strong>注意：长度因数据库不同而不同</strong> MySQL中使用select uuid()语句获得的为36位（包含标准格式的“-”） Oracle中，使用select rawtohex(sys_guid()) from dual语句获得的为32位（不包含“-”）  <strong>特点：需要数据库支持查询uuid，生成时需要查询数据库，效率没有uuid高，推荐使用uuid。</strong></p>
+<h1 id="10、foreign"><a href="#10、foreign" class="headerlink" title="10、foreign"></a>10、foreign</h1><p>使用另外一个相关联的对象的主键作为该对象主键。主要用于一对一关系中。</p>
+<p><strong>user</strong></p>
+<p>该例使用domain.User的主键作为本类映射的主键。 <strong>特点：很少使用，大多用在一对一关系中。</strong></p>
+<h1 id="11、select"><a href="#11、select" class="headerlink" title="11、select"></a>11、select</h1><p>使用触发器生成主键，主要用于早期的数据库主键生成机制，能用到的地方非常少。</p>
+<h1 id="12、其他注释方式配置"><a href="#12、其他注释方式配置" class="headerlink" title="12、其他注释方式配置"></a>12、其他注释方式配置</h1><p>注释方式与配置文件底层实现方式相同，只是配置的方式换成了注释方式 自动增长，适用于支持自增字段的数据库</p>
+<p><strong>@Id</strong></p>
+<p><strong>@GeneratedValue(strategy = GenerationType.<em>IDENTITY</em>)</strong></p>
+<p>根据底层数据库自动选择方式，需要底层数据库的设置 如MySQL，会使用自增字段，需要将主键设置成auto_increment。</p>
+<p><strong>@Id</strong></p>
+<p><strong>@GeneratedValue(strategy = GenerationType.<em>AUTO</em>)</strong></p>
+<p>使用表存储生成的主键，可以跨数据库。 每次需要主键值时，查询名为<strong>“hibernate_table”</strong>的表，查找主键列<strong>“gen_pk”</strong>值为<strong>“2”</strong>记录，得到这条记录的<strong>“gen_val”</strong>值，根据这个值，和<strong>allocationSize</strong>的值生成主键值。</p>
+<p><strong>@Id</strong></p>
+<p><strong>@GeneratedValue(strategy = GenerationType.<em>TABLE</em>, generator = “ud”)</strong></p>
+<p><strong>@TableGenerator(name = “ud”,</strong></p>
+<p><strong>table = “hibernate_table”,</strong></p>
+<p><strong>pkColumnName = “gen_pk”,</strong></p>
+<p><strong>pkColumnValue = “2”,</strong></p>
+<p><strong>valueColumnName = “gen_val”,</strong></p>
+<p><strong>initialValue = 2,</strong></p>
+<p><strong>allocationSize = 5)</strong></p>
+<p>使用序列存储主键值</p>
+<p><strong>@Id</strong></p>
+<p><strong>@GeneratedValue(strategy = GenerationType.<em>SEQUENCE</em>, generator = “ud”)</strong></p>
+<p><strong>@SequenceGenerator(name = “ud”,</strong></p>
+<p><strong>sequenceName = “hibernate_seq”,</strong></p>
+<p><strong>allocationSize = 1,</strong></p>
+<p><strong>initialValue = 2)</strong></p>
+<h1 id="13、小结"><a href="#13、小结" class="headerlink" title="13、小结"></a>13、小结</h1><p><strong>1**</strong>、为了保证对象标识符的唯一性与不可变性，应该让Hibernate来为主键赋值，而不是程序。** <strong>2**</strong>、正常使用Hibernate维护主键，最好将主键的setter方法设置成private，从而避免人为或程序修改主键，而使用assigned方式，就不能用private，否则无法给主键赋值。** <strong>2、Hibernate中唯一一种最简单通用的主键生成器就是uuid。虽然是个32位难读的长字符串，但是它没有跨数据库的问题，将来切换数据库极其简单方便，推荐使用！</strong> <strong>3、自动增长字段类型与序列</strong></p>
+<p><strong>数据库</strong></p>
+<p><strong>自动增长字段</strong></p>
+<p><strong>序列</strong></p>
+<p><strong>MySQL</strong></p>
+<p><strong>是</strong></p>
+<p><strong>Oracle</strong></p>
+<p><strong>是</strong></p>
+<p><strong>DB2</strong></p>
+<p><strong>是</strong></p>
+<p><strong>是</strong></p>
+<p><strong>MS SQL Server</strong></p>
+<p><strong>是</strong></p>
+<p><strong>Sybase</strong></p>
+<p><strong>是</strong></p>
+<p><strong>HypersonicSQL</strong></p>
+<p><strong>是</strong></p>
+<p><strong>PostgreSQL</strong></p>
+<p><strong>是</strong></p>
+<p><strong>SAP DB</strong></p>
+<p><strong>是</strong></p>
+<p><strong>HSQLDB</strong></p>
+<p><strong>是</strong></p>
+<p><strong>Infomix</strong></p>
+<p><strong>是</strong></p>
+<p><strong>4、关于hilo机制注意：</strong> <strong>hilo算法生成的标志只能在一个数据库中保证唯一。</strong> <strong>当用户为Hibernate自行提供连接，或者Hibernate通过JTA，从应用服务器的数据源获取数据库连接时，无法使用hilo，因为这不能保证hilo单独在新的数据库连接的事务中访问hi值表，这种情况，如果数据库支持序列，可以使用seqhilo。</strong> <strong>5、使用identity、native、GenerationType.AUTO等方式生成主键时，只要用到自增字段，数据库表的字段必须设置成自动增加的，否则出错。</strong> <strong>6、还有一些方法未列出来，例如uuid.hex，sequence-identity等，这些方法不是很常用，且已被其他方法代替，如uuid.hex，官方文档里建议不使用，而直接使用uuid方法。</strong> <strong>7、Hibernate的各版本主键生成策略配置有略微差别，但实现基本相同。如，有的版本默认sequence不指定序列名，则使用名为hibernate_sequence的序列，有的版本则必须指定序列名。</strong> <strong>8、还可以自定义主键生成策略，这里暂时不讨论，只讨论官方自带生成策略。</strong>   转自：<a href="http://www.cnblogs.com/kakafra/archive/2012/09/16/2687569.html" target="_blank" rel="noopener">http://www.cnblogs.com/kakafra/archive/2012/09/16/2687569.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/" rel="next" title="windows核心编程-错误处理">
+                <i class="fa fa-chevron-left"></i> windows核心编程-错误处理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/04/03/c-e9-bb-98-e8-ae-a4-e6-9e-84-e9-80-a0-e5-87-bd-e6-95-b0/" rel="prev" title="c++ 默认构造函数">
+                c++ 默认构造函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">xtestw</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1、assigned"><span class="nav-number">1.</span> <span class="nav-text">1、assigned</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2、increment"><span class="nav-number">2.</span> <span class="nav-text">2、increment</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3、hilo"><span class="nav-number">3.</span> <span class="nav-text">3、hilo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4、seqhilo"><span class="nav-number">4.</span> <span class="nav-text">4、seqhilo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5、sequence"><span class="nav-number">5.</span> <span class="nav-text">5、sequence</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6、identity"><span class="nav-number">6.</span> <span class="nav-text">6、identity</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#7、native"><span class="nav-number">7.</span> <span class="nav-text">7、native</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#8、uuid"><span class="nav-number">8.</span> <span class="nav-text">8、uuid</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#9、guid"><span class="nav-number">9.</span> <span class="nav-text">9、guid</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#10、foreign"><span class="nav-number">10.</span> <span class="nav-text">10、foreign</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#11、select"><span class="nav-number">11.</span> <span class="nav-text">11、select</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#12、其他注释方式配置"><span class="nav-number">12.</span> <span class="nav-text">12、其他注释方式配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#13、小结"><span class="nav-number">13.</span> <span class="nav-text">13、小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtestw</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>
