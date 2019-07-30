@@ -236,155 +236,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/09/01/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-b7-a5-e5-8e-82-e6-a8-a1-e5-bc-8f/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="xtestw">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="XtestW's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2014/09/01/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-b7-a5-e5-8e-82-e6-a8-a1-e5-bc-8f/" itemprop="url">设计模式-工厂模式</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-09-01T04:12:00+08:00">
-                2014-09-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Design-Pattern/" itemprop="url" rel="index">
-                    <span itemprop="name">Design Pattern</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>在面向对象的编程中，我们常常会用到new这个关键字，同时，面向对象可以实现多态，这样的话，我们常常就会用父类或者接口定义一个变量，在用到这个变量的时候，再new一个具体的对象，但是有的时候，这个new的对象不是确定的，可能是要根据不同的场景，new出不同的子类，这个很简单的就可以通过if 或者switch来判断实现，但是，这样子以来的话，如果在很多个地方都出现了这种情况，岂不是都要在这些个地方来写这些一样的代码？这样真的好么？ 工厂模式就是用来解决这种对象的生成的办法。工厂模式主要分为3种：简单工厂，工厂方法，抽象工厂。 简单工厂： 简单工厂其实就是将对象的生成单独抽象出来成为一个单独的类，这样子就可以在生成对象的时候，直接调用这个类的create的方法来返回一个对象。有的时候，这个生成类的方法可以写成静态的，也就是所说的静态工厂. 但是有的时候，这个类生成方法，对于不同的类，生成的过程是不一样的，比如A类，只需要1、2、3这3个类，B类只会生成4,5，6这3个类，如果用简单工厂的话，一是会显得很冗余，逻辑处理很烦，二是每多一个if的判定都会降低效率。我们就把对应的工厂方法放到了不同的类中 工厂方法: 工厂方法就是不把具体的生成类的过程单独抽象成一个类，而是在A,B这两个父类中，定义一个抽象方法createXX（），然后在A，B这两个子类中针对自己实现createXX（）方法。 抽象工厂： 抽象工厂可以针对一组对象的生成，比如A类B类都要有一个1 2 3 这3个类，这3个类是3种类别是一个父类，又分别分为几种，1类中有1a,1b,1c,2类3类中一样，我们的A对象需要的是1a,2b,3a,B对象需要的是1b,2a,3c，那么我们就定义个抽象的工厂类，分别分为create1(),create2(),creat3()，3个方法，然后继承过来两个工厂类，分别返回A,B类需要的工厂，我们在A类,B类的构造函数中注入这两个工厂实现类，就可以调用他们的create1,create2,create3的方法来获取自己想要的1,2,3这3种类了。 设计原则： 工厂模式中用到了一个设计原则，依赖倒置原则：</p>
-<blockquote>
-<p><strong>依赖倒置原则：依赖抽象，不要依赖具体类</strong></p>
-</blockquote>
-<p>其实我的感觉就是定义变量的时候定义父类，而不是具体子类，对象的构建就需要动态的生成，要完成依赖倒置，可以依据下面的方法：</p>
-<blockquote>
-<p><strong>变量不可以持有具体类的引用 不要让类派生自具体类 不要覆盖基类中已实现的方法</strong></p>
-</blockquote>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/08/31/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-a3-85-e9-a5-b0-e8-80-85-e6-a8-a1-e5-bc-8f/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1774,6 +1625,148 @@ public int cost()
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2014/06/09/e5-9b-be-e8-ae-ba-e5-85-a5-e9-97-a8-e7-ae-97-e6-b3-95-e7-90-86-e8-a7-a3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2014/06/09/e5-9b-be-e8-ae-ba-e5-85-a5-e9-97-a8-e7-ae-97-e6-b3-95-e7-90-86-e8-a7-a3/" itemprop="url">图论入门算法理解</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2014-06-09T13:16:00+08:00">
+                2014-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ACMICPC/" itemprop="url" rel="index">
+                    <span itemprop="name">ACMICPC</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>** 1.Dijsktra 算法** Dijsktra算法是基于贪心的，从源点开始扩展，将当前已经是最短路的点加入集合中。dist[i]表示源点s到i的距离，那么初始的时候，找距离源点最近的一个点t0,那么dist[t0]必定是s到t0最短的距离，因为不可能通过其他的点转到t0再让t0最短了（这也是为什么Dijsktra不能处理负权边的原因），同理，扩展第二点的时候也是一样，因为 在扩展第二个点的时候，已经用 第一个点 优化了所有其他的点，那么最近的那个点，一定无法 通过剩余的其他的那个点来 优化自己的距离了，也就是说这个点dist[t1]必定是s到t1的最短路径。 <strong>2.floyd：</strong> 每个点而言，剩余的点的两两最短路，要么经过这个点，要么不经过这个点 ，只要看经过它是否能更短。从另一个角度来理解的话,c[i][j][k]表示i,j经过的中间节点最大的点的标号不超过k的最短路，那么dp的 转移方程就是c[i][j][k]=min(c[i][k][k-1]+c[k][j][k-1],c[i][j][k]). <strong>3.Bellman-ford ** 进行n次按边松弛的操作，之所以是n次，因为每次松弛过程中，都能保证至少一个点获得了最短路，且每个点最多被经过1次，从DP角度来理解的话，d[k][v]=min(d[k-1][v]+e[u][v],d[k-1][v_])_,其中e[u][v]代表的是边，d[k][v]表示的是k次以内到达v的最短距离。 **4.SPFA</strong> 最差的情况是n_(n-1)_e,每个点被松弛n-1次,dp[i]=min(dp[v]+mp[v][i],dp[i])</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -1824,7 +1817,7 @@ public int cost()
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">39</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
