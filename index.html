@@ -98,7 +98,7 @@
     root: '/',
     scheme: 'Pisces',
     version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -136,6 +136,15 @@
 
 
 
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-144813087-1', 'auto');
+  ga('send', 'pageview');
+</script>
 
 
 
@@ -361,19 +370,15 @@
       
         
           
-            <p>工程中的网络请求，有时会需要使用http代理，比较简单的方法是使用apache的httpclient 直接设置代理，但有的时候使用java自带的HttpURLConnection的时候，就需要注意多线程的问题了。 使用HttpURLConnection 实现代理的方法也很简单，在建立连接之前先设置代理：</p>
-<p>Authenticator.setDefault(authenticator);</p>
-<p>需要注意的是，设置代理的方法并不是使用HttpURLConnection的一个方法，而在建立请求的时候，也没有任何调用和使用 Authenticator的地方，可以猜测这里设置了代理是使用了全局量，跟进Authenticator中去，会发现： <img src="http://xtestw.site/wp-content/uploads/2017/08/1.png" alt="1"> <img src="http://xtestw.site/wp-content/uploads/2017/08/2.png" alt="2"> 其实setDefault 方法就是设置了一个静态变量，而这个变量被使用的地方在： <img src="http://xtestw.site/wp-content/uploads/2017/08/3.png" alt="3"> （三个同名函数，相同的处理）这个静态变量被全局的网络请求所使用，而不是当前连接独占的配置，一般来说，当前网络使用一个http代理的时候没有问题（比如我们就是通过elb代理多个IP出口），但是当我们有多个代理的时候，在多线程环境下就会出现问题，如果代理服务器的账号密码不同，请求的服务球对cookie和ip进行校验的时候，就会比较麻烦，所以需要想办法来让每一个HttpURLConnection独占这个代理配置，直接的方法似乎没有，但是可以折中，同步网络请求过程中，HttpURLConnection是和唯一线程绑定的，我们可以用ThreadLocal,让每个线程独占一个代理配置，从而间接的保证每个HttpURLConnection始终使用一个代理配置。 可以定一个类：</p>
-<p>public class ThreadLocalAuthenticator extends Authenticator {</p>
-<p>  ThreadLocal<passwordauthentication> auth = new ThreadLocal&lt;&gt;();</passwordauthentication></p>
-<p>  public void setPasswordAuthentication(PasswordAuthentication passwordAuthentication) {<br>    auth.set(passwordAuthentication);<br>  }</p>
-<p>  public void clearPasswordAuthentication() {<br>    auth.remove();<br>  }</p>
-<p>  @Override<br>  protected PasswordAuthentication getPasswordAuthentication() {<br>    return auth.get();<br>  }<br>}</p>
-<p>然后在http网络请求的工具类中定义一个全局的静态ThreadLocalAuthenticator的实例：</p>
-<p>private static final ThreadLocalAuthenticator authenticator = new ThreadLocalAuthenticator();</p>
-<p>然后在需要的时候使用它就OK了。</p>
-
-          
+          工程中的网络请求，有时会需要使用http代理，比较简单的方法是使用apache的httpclient 直接设置代理，但有的时候使用java自带的HttpURLConnection的时候，就需要注意多线程的问题了。 使用HttpURLConnection 实现代理的方法也很简单，在建立连接之前先设置代
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/08/13/httpurlconnection-e4-bd-bf-e7-94-a8http-e4-bb-a3-e7-90-86/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -513,10 +518,15 @@
       
         
           
-            <p>前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 1. 解压jar或者apk的包 2. JD-GUI 反编译查看class的相关代码，找到修改点 3. 自己编写相应的方法或者类，使用javaassist注入到class文件 4. 重新打包 javassist 使用方法参考： <a href="https://jboss-javassist.github.io/javassist/tutorial/tutorial.html" target="_blank" rel="noopener">https://jboss-javassist.github.io/javassist/tutorial/tutorial.html</a> 附上测试代码，修改一个方法</p>
-<p>public static void main(String[] args) {<br>    try {<br>      javassist.tools.reflect.Loader cl = new javassist.tools.reflect.Loader();<br>      ClassPool pool = ClassPool.getDefault();<br>      pool.insertClassPath(“/tmp/aa/“);<br>      CtClass cc = pool.get(“com.facebook.ads.internal.d.g”);<br>      CtMethod ctmethod = cc.getDeclaredMethod(“c”);<br>      cc.getDeclaredField(“c”);<br>      // getCode()即为需要替换的的代码<br>      ctmethod.setBody(getCode());<br>      cc.writeFile(“/tmp/aa/“);<br>    } catch (CannotCompileException e) {<br>      e.printStackTrace();<br>    } catch (NotFoundException e) {<br>      e.printStackTrace();<br>    } catch (IOException e) {<br>      e.printStackTrace();<br>    }<br>  }<br>}</p>
-
-          
+          前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 1. 解压jar或者apk的包 2. JD-GUI
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/07/23/sdk-e7-af-a1-e6-94-b9/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -656,113 +666,32 @@
       
         
           
-            <p>最近的论文用到了RSA相关的东西，做一个整理。</p>
-<ul>
-<li><a href="#toc_0">RSA</a><ul>
-<li><a href="#toc_1">流程图</a></li>
-<li><a href="#toc_2">选取2个质数p、q</a></li>
-<li><a href="#toc_3">计算n = p * q</a></li>
-<li><a href="#toc_4">计算欧拉函数 φ(n)</a></li>
-<li><a href="#toc_5">选择加密密钥 e</a></li>
-<li><a href="#toc_6">计算解密密钥 d</a></li>
-<li><a href="#toc_7">加密解密</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><ul>
-<li>密钥生成过程： <img src="http://imgdata.hoop8.com/1605/3863736210165.png" alt="RSA"></li>
-<li>加密解密过程： <img src="http://imgdata.hoop8.com/1605/1503736210165.png" alt="RSA"></li>
-</ul>
-<h2 id="选取2个质数p、q"><a href="#选取2个质数p、q" class="headerlink" title="选取2个质数p、q"></a>选取2个质数p、q</h2><p>\(RSA\)算法的主要就是基于一个十分简单的数论事实：将两个大素数相乘十分容易，但是想要对其乘积进行因式分解却极其困难。 同时为了增强强度，\(p-1\)和\(q-1\)的最大公因子要小 质数的选取方法：</p>
-<ul>
-<li>随机搜索法随机产生一个奇数 \(p_1\) 进行素数测试,若是素数,则结束;否则,重新随机产生一个奇数 \(p_2\) 进行素性测试,直至找到一个素数 \(p_t\)。</li>
-<li>随机递增搜索法随机产生一个奇数,对以该数为起点的奇数依次进行测试,直至找到一个素数。这种方法相对于随机搜索法，在速度上有一定的提高，但是并没有本质上的区别</li>
-</ul>
-<p>设:</p>
-<p>\(p=61,q=53\)</p>
-<h2 id="计算n-p-q"><a href="#计算n-p-q" class="headerlink" title="计算n = p * q"></a>计算n = p * q</h2><p>\(n\)是公钥对，密钥对都需要的一个值，为提高保密强度，RSA密钥至少为500位长，一般推荐使用1024位，也有2048位的。</p>
-<p>\( n = p*q=61*53 = 3233 \)</p>
-<p>这个部分是可以直接求解的。</p>
-<h2 id="计算欧拉函数-ϕ-n"><a href="#计算欧拉函数-ϕ-n" class="headerlink" title="计算欧拉函数 ϕ(n)"></a>计算欧拉函数 ϕ(n)</h2><p>\( \phi(n) = (p-1)(q-1) = 60*52 = 3120 \)</p>
-<h2 id="选择加密密钥-e"><a href="#选择加密密钥-e" class="headerlink" title="选择加密密钥 e"></a>选择加密密钥 e</h2><p>加密密钥 \(e\) 需要满足以下条件：</p>
-<p>\(1 &lt; e &lt; \phi(n), gcd(e, \phi(n)) = 1\)</p>
-<p>这个条件是为了确保\(e\)在模\(\phi(n)\)的情况下有逆元。出于安全性考虑 \(e=2\) 永远不该被使用 一般生成这种\(e\)的方法有2种：</p>
-<ul>
-<li>随机生成法</li>
-<li>穷举法</li>
-</ul>
-<p>我们令</p>
-<p>\(e = 17 \)</p>
-<p>即我们得到公钥对：</p>
-<p>\(PU\ = \ \{\ e,n\ \} = \{\ 17,3233\ \} \)</p>
-<h2 id="计算解密密钥-d"><a href="#计算解密密钥-d" class="headerlink" title="计算解密密钥 d"></a>计算解密密钥 d</h2><p>解密密钥 \(d\) 需要满足：</p>
-<p>\(d \equiv\) \(e\)-1 \( \ \ (\ mod\ \phi(n) \ )\)</p>
-<p>其实求的就是\(e\)的逆元，求逆元的方法有3种：</p>
-<ul>
-<li><p>循环求解法枚举所有的数，来求解\(e\)的逆元</p>
-</li>
-<li><p>扩展欧几里</p>
-<blockquote>
-<p>扩展欧几里得算法可以在求得a、b的最大公约数的同时，能找到整数\(x、y\)（其中一个很可能是负数），使它们满足贝祖等式\(ax + by = gcd(a, b)\)。</p>
-</blockquote>
-</li>
-</ul>
-<p>当\(gcd(a, b)=1\),那么\((ax + by = 1)\),此时可以看出\(m\)是\(a\)模\(b\)的乘法逆元，\(n\)是\(b\)模\(a\)的乘法逆元。</p>
-<blockquote>
-<p>扩展欧几里德计算过程：</p>
-<p>\(a = q_1b + r_1 \ \ \ r_1 = ax_1+by_1\)</p>
-<p>\(b = q_2r_1 + r_2 \ \ \ r_2 = ax_2+by_2\)</p>
-<p>\(r_1 = q_3b + r_3 \ \ \ r_3 = ax_3+by_3\)</p>
-<p>…</p>
-<p>\(r_{n-2}= q_nr_{n-1} + r_n \ \ \ r_n = ax_n+by_n\)</p>
-<p>\(r_{n-1}= q_{n+1}r_{n} + 0 \)</p>
-<p>通过移项，得到：</p>
-<p>\(r_i = r_{i-2}-r_{i-1}q_i\)</p>
-<p>同样，从i-1和i-2行，也可以得到:</p>
-<p>\(r_{i-2} = ax_{i-2}+by_{i-2}\ \ \ \ \ r_{i-1}=ax_{i-1}+by_{i-1}\)</p>
-<p>代入：</p>
-<p>\(r_i =a(x_{i-2} - q_ix_{i-1})+b(y_{i-2}-q_iy_{i-1})\)</p>
-<p>因为我们已经假设\(r_i=ax_i+by_i\),因此</p>
-<p>\(x_i =x_{i-2} - q_ix_{i-1}\ \ \ \ \ y_i=y_{i-2} - q_iy_{i-1}\)</p>
-<p>#include <iostream> </iostream></p>
-<p>#include <cstdio></cstdio></p>
-<p>#define LL __int64<br>using namespace std;<br>LL extend_gcd(LL a, LL b, LL &amp;x, LL &amp;y)//ax+by=1返回a,b的gcd<br>{<br>    LL ans, t;<br>    if(b == 0)<br>    {<br>        x = 1;<br>        y = 0;<br>        return a;<br>    }<br>    ans = extend_gcd(b, a%b, x, y);<br>    t = x;<br>    x = y;<br>    y = t - ( a / b ) * y;<br>    return ans;<br>}<br>int main()<br>{<br>    LL a, b, c, x, y;<br>    while(~scanf(“%I64d%I64d%I64d”, &amp;a, &amp;b, &amp;c))//ax+by = c<br>    {<br>        LL gcd = extend_gcd(a,b,x,y);<br>        while(x &lt; 0)//x 为正<br>            x += b,y -= a;<br>        printf(“ax+by = 1的最小正整数解:%I64d %I64d\n”, x, y);//ax+by = 1<br>        //x即为a%b的逆元，y为b%a的逆元<br>        printf(“a mod b的逆元:%I64d\n”, x);<br>        if(c % gcd)<br>        {<br>            printf(“无解！\n”);<br>            continue;<br>        }//ax+by = c<br>        printf(“x=%I64d,y=%I64d\n”, x*c/gcd, y*c/gcd);<br>    }<br>    return 0;<br>}</p>
-</blockquote>
-<ul>
-<li><p>费马小定理成立的前提是\(\phi(n)\)为质数，否则无法使用。 假如\(a\)是整数，\(p\)是质数，且\(a,p\)互质(即两者只有一个公约数1)，那么\(a\)的\((p-1)\)次方除以\(p\)的余数恒等于1。那么逆元为</p>
-<p>\(a\)\(m-2\)\(\ mod\ m \)</p>
-</li>
-</ul>
-<p>利用扩展欧几里得算法可以求得：</p>
-<p>\(d=2753\)</p>
-<p>即我们得到密钥对：</p>
-<p>\(PR\ =\ \{\ d,n\ \} = \{\ 2753,3233\ \}\)</p>
-<h2 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h2><ul>
-<li><p>加密</p>
-<p>\(C = M^e\ (\ mod\ n\ )\)</p>
-</li>
-</ul>
-<p>假设对65加密,即\(M=65\)则：</p>
-<p>\(C=65\)17 \(mod \ 3233 = 2790\)</p>
-<ul>
-<li><p>解密</p>
-<p>\(M = C^d\ (\ mod\ n\ )\)</p>
-</li>
-</ul>
-<p>针对密文\(C=2790\)的情况，我们进行解密：</p>
-<p>\(M = 2790\)2753 \(\ mod\ 3233 = 65.\)</p>
-<blockquote>
-<p>求高次幂的快速幂算法: 比如求解：</p>
-<p>\(a^b\ mod\ n\)</p>
-<p>把b转换成二进制数,该二进制数第\(i\)位的权为 2\(i\)-1 例如, \(b=11\)的二进制是1011</p>
-<p>11 = 23 ×1 + 22 ×0 + 21 ×1 + 20 ×1</p>
-<p>因此，我们将\(a\)11 转化为算</p>
-<p>\( a\)11 =\(a\)20 <em>\(a\)21 \</em> \(a\)23</p>
-<p>int modexp(int a,int b,int n)<br>{<br>    int ret=1;<br>    while(b)<br>    {<br>       if(b&amp;1) ret=ret<em>a%n;<br>       a=a</em>a%n;<br>       b&gt;&gt;=1;<br>    }<br>    return ret;<br>}</p>
-</blockquote>
-<p>// &lt;![CDATA[ if (typeof MathJaxListener !== ‘undefined’) { MathJax.Hub.Register.StartupHook(‘End’, function () { MathJaxListener.invokeCallbackForKey_(‘End’); }); } // ]]&gt;</p>
+          最近的论文用到了RSA相关的东西，做一个整理。
 
-          
+RSA
+流程图
+选取2个质数p、q
+计算n = p * q
+计算欧拉函数 φ(n)
+选择加密密钥 e
+计算解密密钥 d
+加密解密
+
+
+
+流程图
+密钥生成过程： 
+加密解密过程： 
+
+选取2个质数p、q\(RSA\)算法的主要就是基于一个十分简单的数论
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/24/rsa-e6-95-b4-e7-90-86/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -902,116 +831,25 @@
       
         
           
-            <p>最近在看《深度探索c++对象模型》对于对象模型有了一点了解，做一个总结。以下的一些结论的实验见：<a href="https://github.com/xtestw/CPPObjModelTest" target="_blank" rel="noopener">https://github.com/xtestw/CPPObjModelTest</a></p>
-<ul>
-<li><a href="#toc_0">c++对象模型</a><ul>
-<li><a href="#toc_1">单个对象模型</a></li>
-<li><a href="#toc_2">单继承对象模型</a><ul>
-<li><a href="#toc_3">不考虑虚函数的单继承</a></li>
-<li><a href="#toc_4">考虑虚函数的单继承</a></li>
-</ul>
-</li>
-<li><a href="#toc_5">多继承对象模型</a></li>
-<li><a href="#toc_6">存在虚基类的对象模型</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="单个对象模型"><a href="#单个对象模型" class="headerlink" title="单个对象模型"></a>单个对象模型</h2><p>对于一个单个对象而言，对象的内部结构是类似于一张表结构，依次存储着c++的对象内部数据，我们都知道，一个c++的类内部一般会包含下面的几个部分：</p>
-<ul>
-<li>非静态成员变量</li>
-<li>非静态成员函数</li>
-<li>静态成员变量</li>
-<li>静态成员函数</li>
-<li>虚函数</li>
-<li>友元函数</li>
-<li>构造函数、析构函数、拷贝构造函数</li>
-</ul>
-<p>对于一个简单的对象，将设我们定义类如下：</p>
-<pre><code>class base{
-    public:
-        base();
-        virtual ~base();
-        int a,b;
-        void f();
-        static int c,d;
-        static void f2();
-        virtual void f3();
-};</code></pre><p>不考虑继承的话，他们的存储结构会是这样的一个结构，如下图： <img src="http://i.imgur.com/lVYnj2P.png" alt> 其中，非静态数据成员，被放在对象的内部，而虚函数会放在对象的一个虚表中，对象在编译的时候会形成一个vptr的指针置于对象的内部，其指针指向这张虚表（考虑类的继承和多态，指向这张虚表的vptr的设置和重置会在构造函数、析构函数和拷贝函数中自动完成）。 对象在图对象表中的位置，是按照对象的申明顺序来排列的。比如a,b的申明，因为a先申明的，那么a就被先压栈，占据高地址。 而如图所见，不论虚函数是多少个，对象内部只有一个指针指向它，所以始终占一个指针大小的空间（32位机器下是4byte). 而对这个vptr在对象中的位置，不同的编译器的处理是不一样的，vc为代表的是将其放在了头部，而gcc等则是将其放在了对象的尾部，放在尾部是为了综合考虑与C的struct的兼容问题，而在头部，则是考虑继承之后的子类在调用vptr的方便性。(我个人更偏向于放在头部，因为这样在继承的时候更好理解也更方便自然),本文中的代码和模型是基于g++编译器做的实验，都是放在头部的。 还有一个问题，《深度探索c++对象模型》中，对这个1byte的类的type_info位置，他是说放在虚表的第一个位置，而其实g++中，下面这个实验，并不是放在虚表中的：</p>
-<pre><code>#include &lt;iostream&gt;
-using namespace std;
-class base{
-    public:
-        virtual void f(){cout&lt;&lt;&quot;f&quot;&lt;&lt;endl;}
-        virtual void f1(){cout&lt;&lt;&quot;f1&quot;&lt;&lt;endl;}
-};
-typedef void(*Fun)(void);
-int main(){
-    base b;
-    ((Fun)*(int*)*(int*)(&amp;b))();
-    ((Fun)*((int*)*(int*)(&amp;b)+1))();
-    return 0;
-}</code></pre><p>上面的这段代码的输出是</p>
-<pre><code>f
-f1</code></pre><p>可见虚表的第一项并不是type_info。</p>
-<h2 id="单继承对象模型"><a href="#单继承对象模型" class="headerlink" title="单继承对象模型"></a>单继承对象模型</h2><h3 id="不考虑虚函数的单继承"><a href="#不考虑虚函数的单继承" class="headerlink" title="不考虑虚函数的单继承"></a>不考虑虚函数的单继承</h3><p>在对象申明的过程中，如果从上级单继承了一个对象，那么对父类的成员变量的存储是怎样的一个结构呢，参看下面的代码</p>
-<pre><code>class base{
-    public:
-        int a,b;
-};
-class derived:public base{
-    public:
-        int c,d;
-};</code></pre><p>子类从父类继承过来的成员变量，无论是private,protected,public,也无论是通过private,protected还是public的方式继承过来的，其在子类中的对象中，都有内存空间来存储它，只是这些成员变量对子类的函数的可访问性的问题而已，不考虑非虚函数和静态变量这些（下面的没说明也是一样）没有存在类里的成员，类内部的结构应该是下面这种情况： <img src="http://i.imgur.com/11kcdkI.png" alt> 这个地方需要注意的是，如果基类的b不是int类型，而是char类型，而且c,d也都不是int类型，也都是char类型，我们sizeof(derived)的值是多少呢？！ 答案是12！<strong>因为在继承过来的时候，基类已经做了位对齐的处理，在b和c之间填充了3个空字节，</strong>所以，</p>
-<pre><code>sizeof（derived)=sizeof(base)+1(c)+1(d)+2(padding);</code></pre><h3 id="考虑虚函数的单继承"><a href="#考虑虚函数的单继承" class="headerlink" title="考虑虚函数的单继承"></a>考虑虚函数的单继承</h3><p>如果父类中，出现虚函数，子类中也出现虚函数，会是怎样的一个结构呢？！比如下面的代码：</p>
-<pre><code>class base{
-    public:
-        int a,b;
-        virtual void f();
-};
-class derived:public base{
-    public:
-        int c,d;
-        virtual void f2();
-};</code></pre><p>在实际的存储中的结构应该是这个样子的： <img src="http://i.imgur.com/mnAVrDA.png" alt></p>
-<h2 id="多继承对象模型"><a href="#多继承对象模型" class="headerlink" title="多继承对象模型"></a>多继承对象模型</h2><p>上面讨论了单继承的对象模型，现在讨论一下多继承的对象模型，比如下面的代码：</p>
-<pre><code>class base1{
-    public:
-        int a,b;
-        virtual void f();
-};
-class base2{
-    public:
-        int c,d;
-        virtual void f2();
-};
-class derived:public base1,public base2{
-    public:
-        int e,ff;
-        virtual void f3();
-};</code></pre><p>上面的代码，在类中的布局应该是下面的这样的： <img src="http://i.imgur.com/ZXmsdm4.png" alt> 在这种继承模式下，每个父类都会有一张自己的虚表，里面包含自己的虚函数，而派生类中自己的虚函数，则是放在第一个虚表中的，如果派生类重写了虚函数，那么会自动替换成派生类的虚函数。</p>
-<h2 id="存在虚基类的对象模型"><a href="#存在虚基类的对象模型" class="headerlink" title="存在虚基类的对象模型"></a>存在虚基类的对象模型</h2><p>对象继承中，涉及到虚基类的问题，对象继承链中，虚基类只会保存一个实例。如下面的代码：</p>
-<pre><code>class base{
-    public:
-        int a,b;
-        virtual void f();
-};
-class base1:public virtual base{
-    public:
-        int c,d;
-        virtual void f1();
-};
-class base2：public virtual base{
-    public:
-        int e,ff;
-        virtual void f2();
-};
-class derived:public base1,public base2{
-    public:
-        int g,h;
-        virtual void f3();
-};</code></pre><p>这份代码在实际的对象继承中应该是这个样子的布局： <img src="http://i.imgur.com/P5WybyU.png" alt> 可以发现虚继承过来的基类并不像之前那样放在最上面，而且其实是放在最下面的（事实上，在g++中，表中地址从上而下是变大的）,而每一个虚表都是指向的自己的虚函数，在继承类中，如果重写了这个虚函数函数，对应的虚表中的函数也是会被改成继承类中的虚函数的。 // &lt;![CDATA[ if (typeof MathJaxListener !== ‘undefined’) { MathJax.Hub.Register.StartupHook(‘End’, function () { MathJaxListener.invokeCallbackForKey_(‘End’); }); } // ]]&gt;</p>
+          最近在看《深度探索c++对象模型》对于对象模型有了一点了解，做一个总结。以下的一些结论的实验见：https://github.com/xtestw/CPPObjModelTest
 
-          
+c++对象模型
+单个对象模型
+单继承对象模型
+不考虑虚函数的单继承
+考虑虚函数的单继承
+
+
+多继承对象模型
+存在虚基类
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/05/cplusplusobjectmodel/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1151,136 +989,15 @@ class derived:public base1,public base2{
       
         
           
-            <p>转自：<a href="http://www.ibm.com/developerworks/cn/linux/l-cn-nohup/" target="_blank" rel="noopener">http://www.ibm.com/developerworks/cn/linux/l-cn-nohup/</a> 我们经常会碰到这样的问题，用 telnet/ssh 登录了远程的 Linux 服务器，运行了一些耗时较长的任务， 结果却由于网络的不稳定导致任务中途失败。如何让命令提交后不受本地关闭终端窗口/网络断开连接的干扰呢？下面举了一些例子， 您可以针对不同的场景选择不同的方式来处理这个问题。</p>
-<h2 id="nohup-setsid-amp"><a href="#nohup-setsid-amp" class="headerlink" title="nohup/setsid/&amp;"></a>nohup/setsid/&amp;</h2><h4 id="场景："><a href="#场景：" class="headerlink" title="场景："></a>场景：</h4><p>如果只是临时有一个命令需要长时间运行，什么方法能最简便的保证它在后台稳定运行呢？</p>
-<blockquote>
-<h5 id="hangup-名称的来由"><a href="#hangup-名称的来由" class="headerlink" title="hangup 名称的来由"></a>hangup 名称的来由</h5><p>在 Unix 的早期版本中，每个终端都会通过 modem 和系统通讯。当用户 logout 时，modem 就会挂断（hang up）电话。 同理，当 modem 断开连接时，就会给终端发送 hangup 信号来通知其关闭所有子进程。</p>
-</blockquote>
-<h4 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h4><p>我们知道，当用户注销（logout）或者网络断开时，终端会收到 HUP（hangup）信号从而关闭其所有子进程。因此，我们的解决办法就有两种途径：要么让进程忽略 HUP 信号，要么让进程运行在新的会话里从而成为不属于此终端的子进程。</p>
-<h3 id="1-nohup"><a href="#1-nohup" class="headerlink" title="1. nohup"></a>1. nohup</h3><p>nohup 无疑是我们首先想到的办法。顾名思义，nohup 的用途就是让提交的命令忽略 hangup 信号。让我们先来看一下 nohup 的帮助信息： NOHUP(1) User Commands NOHUP(1)</p>
-<pre><code>NAME
-       nohup - run a command immune to hangups, with output to a non-tty
-
-SYNOPSIS
-       nohup COMMAND [ARG]...
-       nohup OPTION
-
-DESCRIPTION
-       Run COMMAND, ignoring hangup signals.
-
-       --help display this help and exit
-
-       --version
-              output version information and exit</code></pre><p>可见，nohup 的使用是十分方便的，只需在要处理的命令前加上 nohup 即可，标准输出和标准错误缺省会被重定向到 nohup.out 文件中。一般我们可在结尾加上&amp;来将命令同时放入后台运行，也可用&gt;filename 2&gt;&amp;1来更改缺省的重定向文件名。</p>
-<h5 id="nohup-示例"><a href="#nohup-示例" class="headerlink" title="nohup 示例"></a>nohup 示例</h5><pre><code>[root@pvcent107 ~]# nohup ping www.ibm.com &amp;
-[1] 3059
-nohup: appending output to `nohup.out&apos;
-[root@pvcent107 ~]# ps -ef |grep 3059
-root      3059   984  0 21:06 pts/3    00:00:00 ping www.ibm.com
-root      3067   984  0 21:06 pts/3    00:00:00 grep 3059
-[root@pvcent107 ~]#</code></pre><h3 id="2-setsid"><a href="#2-setsid" class="headerlink" title="2.setsid"></a>2.setsid</h3><p>nohup 无疑能通过忽略 HUP 信号来使我们的进程避免中途被中断，但如果我们换个角度思考，如果我们的进程不属于接受 HUP 信号的终端的子进程，那么自然也就不会受到 HUP 信号的影响了。setsid 就能帮助我们做到这一点。让我们先来看一下 setsid 的帮助信息： SETSID(8) Linux Programmer’s Manual SETSID(8)</p>
-<pre><code>NAME
-       setsid - run a program in a new session
-
-SYNOPSIS
-       setsid program [ arg ... ]
-
-DESCRIPTION
-       setsid runs a program in a new session.</code></pre><p>可见 setsid 的使用也是非常方便的，也只需在要处理的命令前加上 setsid 即可。</p>
-<h5 id="setsid-示例"><a href="#setsid-示例" class="headerlink" title="setsid 示例"></a>setsid 示例</h5><pre><code>[root@pvcent107 ~]# setsid ping www.ibm.com
-[root@pvcent107 ~]# ps -ef |grep www.ibm.com
-root     31094     1  0 07:28 ?        00:00:00 ping www.ibm.com
-root     31102 29217  0 07:29 pts/4    00:00:00 grep www.ibm.com
-[root@pvcent107 ~]#</code></pre><p>值得注意的是，上例中我们的进程 ID(PID)为31094，而它的父 ID（PPID）为1（即为 init 进程 ID），并不是当前终端的进程 ID。请将此例与nohup 例中的父 ID 做比较。</p>
-<h3 id="3-amp"><a href="#3-amp" class="headerlink" title="3.&amp;"></a>3.&amp;</h3><p>这里还有一个关于 subshell 的小技巧。我们知道，将一个或多个命名包含在“()”中就能让这些命令在子 shell 中运行中，从而扩展出很多有趣的功能，我们现在要讨论的就是其中之一。 当我们将&amp;也放入“()”内之后，我们就会发现所提交的作业并不在作业列表中，也就是说，是无法通过jobs来查看的。让我们来看看为什么这样就能躲过 HUP 信号的影响吧。</p>
-<h5 id="subshell-示例"><a href="#subshell-示例" class="headerlink" title="subshell 示例"></a>subshell 示例</h5><pre><code>[root@pvcent107 ~]# (ping www.ibm.com &amp;)
-[root@pvcent107 ~]# ps -ef |grep www.ibm.com
-root     16270     1  0 14:13 pts/4    00:00:00 ping www.ibm.com
-root     16278 15362  0 14:13 pts/4    00:00:00 grep www.ibm.com
-[root@pvcent107 ~]#</code></pre><p>从上例中可以看出，新提交的进程的父 ID（PPID）为1（init 进程的 PID），并不是当前终端的进程 ID。因此并不属于当前终端的子进程，从而也就不会受到当前终端的 HUP 信号的影响了。</p>
-<h2 id="disown"><a href="#disown" class="headerlink" title="disown"></a>disown</h2><h4 id="场景：-1"><a href="#场景：-1" class="headerlink" title="场景："></a>场景：</h4><p>我们已经知道，如果事先在命令前加上 nohup 或者 setsid 就可以避免 HUP 信号的影响。但是如果我们未加任何处理就已经提交了命令，该如何补救才能让它避免 HUP 信号的影响呢？</p>
-<h4 id="解决方法：-1"><a href="#解决方法：-1" class="headerlink" title="解决方法："></a>解决方法：</h4><p>这时想加 nohup 或者 setsid 已经为时已晚，只能通过作业调度和 disown 来解决这个问题了。让我们来看一下 disown 的帮助信息： disown [-ar] [-h] [jobspec …] Without options, each jobspec is removed from the table of active jobs. If the -h option is given, each jobspec is not removed from the table, but is marked so that SIGHUP is not sent to the job if the shell receives a SIGHUP. If no jobspec is present, and neither the -a nor the -r option is supplied, the current job is used. If no jobspec is supplied, the -a option means to remove or mark all jobs; the -r option without a jobspec argument restricts operation to running jobs. The return value is 0 unless a jobspec does not specify a valid job. 可以看出，我们可以用如下方式来达成我们的目的。</p>
-<blockquote>
-<h5 id="灵活运用-CTRL-z"><a href="#灵活运用-CTRL-z" class="headerlink" title="灵活运用 CTRL-z"></a>灵活运用 CTRL-z</h5><p>在我们的日常工作中，我们可以用 CTRL-z 来将当前进程挂起到后台暂停运行，执行一些别的操作，然后再用 fg 来将挂起的进程重新放回前台（也可用 bg 来将挂起的进程放在后台）继续运行。这样我们就可以在一个终端内灵活切换运行多个任务，这一点在调试代码时尤为有用。因为将代码编辑器挂起到后台再重新放回时，光标定位仍然停留在上次挂起时的位置，避免了重新定位的麻烦。</p>
-</blockquote>
-<ul>
-<li>用disown -h jobspec来使某个作业忽略HUP信号。</li>
-<li>用disown -ah 来使所有的作业都忽略HUP信号。</li>
-<li>用disown -rh 来使正在运行的作业忽略HUP信号。</li>
-</ul>
-<p>需要注意的是，当使用过 disown 之后，会将把目标作业从作业列表中移除，我们将不能再使用jobs来查看它，但是依然能够用ps -ef查找到它。 但是还有一个问题，这种方法的操作对象是作业，如果我们在运行命令时在结尾加了&amp;来使它成为一个作业并在后台运行，那么就万事大吉了，我们可以通过jobs命令来得到所有作业的列表。但是如果并没有把当前命令作为作业来运行，如何才能得到它的作业号呢？答案就是用 CTRL-z（按住Ctrl键的同时按住z键）了！ CTRL-z 的用途就是将当前进程挂起（Suspend），然后我们就可以用jobs命令来查询它的作业号，再用bg jobspec来将它放入后台并继续运行。需要注意的是，如果挂起会影响当前进程的运行结果，请慎用此方法。</p>
-<h5 id="disown-示例1（如果提交命令时已经用“-amp-”将命令放入后台运行，则可以直接使用“disown”）"><a href="#disown-示例1（如果提交命令时已经用“-amp-”将命令放入后台运行，则可以直接使用“disown”）" class="headerlink" title="disown 示例1（如果提交命令时已经用“&amp;”将命令放入后台运行，则可以直接使用“disown”）"></a>disown 示例1（如果提交命令时已经用“&amp;”将命令放入后台运行，则可以直接使用“disown”）</h5><pre><code>[root@pvcent107 build]# cp -r testLargeFile largeFile &amp;
-[1] 4825
-[root@pvcent107 build]# jobs
-[1]+  Running                 cp -i -r testLargeFile largeFile &amp;
-[root@pvcent107 build]# disown -h %1
-[root@pvcent107 build]# ps -ef |grep largeFile
-root      4825   968  1 09:46 pts/4    00:00:00 cp -i -r testLargeFile largeFile
-root      4853   968  0 09:46 pts/4    00:00:00 grep largeFile
-[root@pvcent107 build]# logout</code></pre><h5 id="disown-示例2（如果提交命令时未使用“-amp-”将命令放入后台运行，可使用-CTRL-z-和“bg”将其放入后台，再使用“disown”）"><a href="#disown-示例2（如果提交命令时未使用“-amp-”将命令放入后台运行，可使用-CTRL-z-和“bg”将其放入后台，再使用“disown”）" class="headerlink" title="disown 示例2（如果提交命令时未使用“&amp;”将命令放入后台运行，可使用 CTRL-z 和“bg”将其放入后台，再使用“disown”）"></a>disown 示例2（如果提交命令时未使用“&amp;”将命令放入后台运行，可使用 CTRL-z 和“bg”将其放入后台，再使用“disown”）</h5><pre><code>[root@pvcent107 build]# cp -r testLargeFile largeFile2
-
-[1]+  Stopped                 cp -i -r testLargeFile largeFile2
-[root@pvcent107 build]# bg %1
-[1]+ cp -i -r testLargeFile largeFile2 &amp;
-[root@pvcent107 build]# jobs
-[1]+  Running                 cp -i -r testLargeFile largeFile2 &amp;
-[root@pvcent107 build]# disown -h %1
-[root@pvcent107 build]# ps -ef |grep largeFile2
-root      5790  5577  1 10:04 pts/3    00:00:00 cp -i -r testLargeFile largeFile2
-root      5824  5577  0 10:05 pts/3    00:00:00 grep largeFile2
-[root@pvcent107 build]#</code></pre><h2 id="screen"><a href="#screen" class="headerlink" title="screen"></a>screen</h2><h4 id="场景：-2"><a href="#场景：-2" class="headerlink" title="场景："></a>场景：</h4><p>我们已经知道了如何让进程免受 HUP 信号的影响，但是如果有大量这种命令需要在稳定的后台里运行，如何避免对每条命令都做这样的操作呢？</p>
-<h4 id="解决方法：-2"><a href="#解决方法：-2" class="headerlink" title="解决方法："></a>解决方法：</h4><pre><code>此时最方便的方法就是 screen 了。简单的说，screen 提供了 ANSI/VT100 的终端模拟器，使它能够在一个真实终端下运行多个全屏的伪终端。screen 的参数很多，具有很强大的功能，我们在此仅介绍其常用功能以及简要分析一下为什么使用 screen 能够避免 HUP 信号的影响。我们先看一下 screen 的帮助信息：                                                   SCREEN(1)
-
-NAME
-       screen - screen manager with VT100/ANSI terminal emulation
-
-SYNOPSIS
-       screen [ -options ] [ cmd [ args ] ]
-       screen -r [[pid.]tty[.host]]
-       screen -r sessionowner/[[pid.]tty[.host]]
-
-DESCRIPTION
-       Screen  is  a  full-screen  window manager that multiplexes a physical
-       terminal between several  processes  (typically  interactive  shells).
-       Each  virtual  terminal provides the functions of a DEC VT100 terminal
-       and, in addition, several control functions from the  ISO  6429  (ECMA
-       48,  ANSI  X3.64)  and ISO 2022 standards (e.g. insert/delete line and
-       support for multiple character sets).  There is a  scrollback  history
-       buffer  for  each virtual terminal and a copy-and-paste mechanism that
-       allows moving text regions between windows.</code></pre><p>使用 screen 很方便，有以下几个常用选项：</p>
-<ul>
-<li><p>用screen -dmS session name来建立一个处于断开模式下的会话（并指定其会话名）。</p>
-</li>
-<li><p>用screen -list 来列出所有会话。</p>
-</li>
-<li><p>用screen -r session name来重新连接指定会话。</p>
-</li>
-<li><p>用快捷键CTRL-a d 来暂时断开当前会话。</p>
-<h5 id="screen-示例"><a href="#screen-示例" class="headerlink" title="screen 示例"></a>screen 示例</h5><p>[root@pvcent107 ~]# screen -dmS Urumchi [root@pvcent107 ~]# screen -list There is a screen on: 12842.Urumchi (Detached) 1 Socket in /tmp/screens/S-root. [root@pvcent107 ~]# screen -r Urumchi</p>
-</li>
-</ul>
-<p>当我们用“-r”连接到 screen 会话后，我们就可以在这个伪终端里面为所欲为，再也不用担心 HUP 信号会对我们的进程造成影响，也不用给每个命令前都加上“nohup”或者“setsid”了。这是为什么呢？让我来看一下下面两个例子吧。</p>
-<h5 id="1-未使用-screen-时新进程的进程树"><a href="#1-未使用-screen-时新进程的进程树" class="headerlink" title="1. 未使用 screen 时新进程的进程树"></a>1. 未使用 screen 时新进程的进程树</h5><pre><code>[root@pvcent107 ~]# ping www.google.com &amp;
-[1] 9499
-[root@pvcent107 ~]# pstree -H 9499
-init─┬─Xvnc
-     ├─acpid
-     ├─atd
-     ├─2*[sendmail] 
-     ├─sshd─┬─sshd───bash───pstree
-     │       └─sshd───bash───ping</code></pre><p>我们可以看出，未使用 screen 时我们所处的 bash 是 sshd 的子进程，当 ssh 断开连接时，HUP 信号自然会影响到它下面的所有子进程（包括我们新建立的 ping 进程）。</p>
-<h5 id="2-使用了-screen-后新进程的进程树"><a href="#2-使用了-screen-后新进程的进程树" class="headerlink" title="2. 使用了 screen 后新进程的进程树"></a>2. 使用了 screen 后新进程的进程树</h5><pre><code>[root@pvcent107 ~]# screen -r Urumchi
-[root@pvcent107 ~]# ping www.ibm.com &amp;
-[1] 9488
-[root@pvcent107 ~]# pstree -H 9488
-init─┬─Xvnc
-     ├─acpid
-     ├─atd
-     ├─screen───bash───ping
-     ├─2*[sendmail]</code></pre><p>而使用了 screen 后就不同了，此时 bash 是 screen 的子进程，而 screen 是 init（PID为1）的子进程。那么当 ssh 断开连接时，HUP 信号自然不会影响到 screen 下面的子进程了。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>现在几种方法已经介绍完毕，我们可以根据不同的场景来选择不同的方案。nohup/setsid 无疑是临时需要时最方便的方法，disown 能帮助我们来事后补救当前已经在运行了的作业，而 screen 则是在大批量操作时不二的选择了。 // &lt;![CDATA[ var _self=”undefined”!=typeof window?window:”undefined”!=typeof WorkerGlobalScope&amp;&amp;self instanceof WorkerGlobalScope?self:{},Prism=function(){var e=/\blang(?:uage)?-(\w+)\b/i,t=0,n=_self.Prism={util:{encode:function(e){return e instanceof a?new a(e.type,n.util.encode(e.content),e.alias):”Array”===n.util.type(e)?e.map(n.util.encode):e.replace(/&amp;/g,”&amp;”).replace(/&lt;/g,”&lt;”).replace(/\u00a0/g,” “)},type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},objId:function(e){return e.__id||Object.defineProperty(e,”__id”,{value:++t}),e.__id},clone:function(e){var t=n.util.type(e);switch(t){case”Object”:var a={};for(var r in e)e.hasOwnProperty(r)&amp;&amp;(a[r]=n.util.clone(e[r]));return a;case”Array”:return e.map&amp;&amp;e.map(function(e){return n.util.clone(e)})}return e}},languages:{extend:function(e,t){var a=n.util.clone(n.languages[e]);for(var r in t)a[r]=t[r];return a},insertBefore:function(e,t,a,r){r=r||n.languages;var l=r[e];if(2==arguments.length){a=arguments[1];for(var i in a)a.hasOwnProperty(i)&amp;&amp;(l[i]=a[i]);return l}var o={};for(var s in l)if(l.hasOwnProperty(s)){if(s==t)for(var i in a)a.hasOwnProperty(i)&amp;&amp;(o[i]=a[i]);o[s]=l[s]}return n.languages.DFS(n.languages,function(t,n){n===r[e]&amp;&amp;t!=e&amp;&amp;(this[t]=o)}),r[e]=o},DFS:function(e,t,a,r){r=r||{};for(var l in e)e.hasOwnProperty(l)&amp;&amp;(t.call(e,l,e[l],a||l),”Object”!==n.util.type(e[l])||r[n.util.objId(e[l])]?”Array”!==n.util.type(e[l])||r[n.util.objId(e[l])]||(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,l,r)):(r[n.util.objId(e[l])]=!0,n.languages.DFS(e[l],t,null,r)))}},plugins:{},highlightAll:function(e,t){var a={callback:t,selector:’code[class<em>=”language-“], [class</em>=”language-“] code, code[class<em>=”lang-“], [class</em>=”lang-“] code’};n.hooks.run(“before-highlightall”,a);for(var r,l=a.elements||document.querySelectorAll(a.selector),i=0;r=l[i++];)n.highlightElement(r,e===!0,a.callback)},highlightElement:function(t,a,r){for(var l,i,o=t;o&amp;&amp;!e.test(o.className);)o=o.parentNode;o&amp;&amp;(l=(o.className.match(e)||[,””])[1],i=n.languages[l]),t.className=t.className.replace(e,””).replace(/\s+/g,” “)+” language-“+l,o=t.parentNode,/pre/i.test(o.nodeName)&amp;&amp;(o.className=o.className.replace(e,””).replace(/\s+/g,” “)+” language-“+l);var s=t.textContent,u={element:t,language:l,grammar:i,code:s};if(!s||!i)return n.hooks.run(“complete”,u),void 0;if(n.hooks.run(“before-highlight”,u),a&amp;&amp;_self.Worker){var c=new Worker(n.filename);c.onmessage=function(e){u.highlightedCode=e.data,n.hooks.run(“before-insert”,u),u.element.innerHTML=u.highlightedCode,r&amp;&amp;r.call(u.element),n.hooks.run(“after-highlight”,u),n.hooks.run(“complete”,u)},c.postMessage(JSON.stringify({language:u.language,code:u.code,immediateClose:!0}))}else u.highlightedCode=n.highlight(u.code,u.grammar,u.language),n.hooks.run(“before-insert”,u),u.element.innerHTML=u.highlightedCode,r&amp;&amp;r.call(t),n.hooks.run(“after-highlight”,u),n.hooks.run(“complete”,u)},highlight:function(e,t,r){var l=n.tokenize(e,t);return a.stringify(n.util.encode(l),r)},tokenize:function(e,t){var a=n.Token,r=[e],l=t.rest;if(l){for(var i in l)t[i]=l[i];delete t.rest}e:for(var i in t)if(t.hasOwnProperty(i)&amp;&amp;t[i]){var o=t[i];o=”Array”===n.util.type(o)?o:[o];for(var s=0;s&lt;o.length;++s){var u=o[s],c=u.inside,g=!!u.lookbehind,h=!!u.greedy,f=0,d=u.alias;u=u.pattern||u;for(var p=0;p&lt;r.length;p++){var m=r[p];if(r.length&gt;e.length)break e;if(!(m instanceof a)){u.lastIndex=0;var y=u.exec(m),v=1;if(!y&amp;&amp;h&amp;&amp;p!=r.length-1){var b=r[p+1].matchedStr||r[p+1],k=m+b;if(p&lt;r.length-2&amp;&amp;(k+=r[p+2].matchedStr||r[p+2]),u.lastIndex=0,y=u.exec(k),!y)continue;var w=y.index+(g?y[1].length:0);if(w&gt;=m.length)continue;var <em>=y.index+y[0].length,P=m.length+b.length;if(v=3,P&gt;=</em>){if(r[p+1].greedy)continue;v=2,k=k.slice(0,P)}m=k}if(y){g&amp;&amp;(f=y[1].length);var w=y.index+f,y=y[0].slice(f),<em>=w+y.length,S=m.slice(0,w),O=m.slice(</em>),j=[p,v];S&amp;&amp;j.push(S);var A=new a(i,c?n.tokenize(y,c):y,d,y,h);j.push(A),O&amp;&amp;j.push(O),Array.prototype.splice.apply(r,j)}}}}}return r},hooks:{all:{},add:function(e,t){var a=n.hooks.all;a[e]=a[e]||[],a[e].push(t)},run:function(e,t){var a=n.hooks.all[e];if(a&amp;&amp;a.length)for(var r,l=0;r=a[l++];)r(t)}}},a=n.Token=function(e,t,n,a,r){this.type=e,this.content=t,this.alias=n,this.matchedStr=a||null,this.greedy=!!r};if(a.stringify=function(e,t,r){if(“string”==typeof e)return e;if(“Array”===n.util.type(e))return e.map(function(n){return a.stringify(n,t,e)}).join(“”);var l={type:e.type,content:a.stringify(e.content,t,r),tag:”span”,classes:[“token”,e.type],attributes:{},language:t,parent:r};if(“comment”==l.type&amp;&amp;(l.attributes.spellcheck=”true”),e.alias){var i=”Array”===n.util.type(e.alias)?e.alias:[e.alias];Array.prototype.push.apply(l.classes,i)}n.hooks.run(“wrap”,l);var o=””;for(var s in l.attributes)o+=(o?” “:””)+s+’=”‘+(l.attributes[s]||””)+’”‘;return”&lt;”+l.tag+’ class=”‘+l.classes.join(“ “)+’” ‘+o+”&gt;”+l.content+”&lt;/“+l.tag+”&gt;”},!_self.document)return _self.addEventListener?(_self.addEventListener(“message”,function(e){var t=JSON.parse(e.data),a=t.language,r=t.code,l=t.immediateClose;_self.postMessage(n.highlight(r,n.languages[a],a)),l&amp;&amp;_self.close()},!1),_self.Prism):_self.Prism;var r=document.currentScript||[].slice.call(document.getElementsByTagName(“script”)).pop();return r&amp;&amp;(n.filename=r.src,document.addEventListener&amp;&amp;!r.hasAttribute(“data-manual”)&amp;&amp;document.addEventListener(“DOMContentLoaded”,n.highlightAll)),_self.Prism}();”undefined”!=typeof module&amp;&amp;module.exports&amp;&amp;(module.exports=Prism),”undefined”!=typeof global&amp;&amp;(global.Prism=Prism); // ]]&gt; // &lt;![CDATA[ !function(){“undefined”!=typeof self&amp;&amp;self.Prism&amp;&amp;self.document&amp;&amp;Prism.hooks.add(“complete”,function(e){if(e.code){var t=e.element.parentNode,s=/\s<em>\bline-numbers\b\s</em>/;if(t&amp;&amp;/pre/i.test(t.nodeName)&amp;&amp;(s.test(t.className)||s.test(e.element.className))&amp;&amp;!e.element.querySelector(“.line-numbers-rows”)){s.test(e.element.className)&amp;&amp;(e.element.className=e.element.className.replace(s,””)),s.test(t.className)||(t.className+=” line-numbers”);var n,a=e.code.match(/\n(?!$)/g),l=a?a.length+1:1,m=new Array(l+1);m=m.join(“<span></span>“),n=document.createElement(“span”),n.className=”line-numbers-rows”,n.innerHTML=m,t.hasAttribute(“data-start”)&amp;&amp;(t.style.counterReset=”linenumber “+(parseInt(t.getAttribute(“data-start”),10)-1)),e.element.appendChild(n)}}})}(); // ]]&gt; // &lt;![CDATA[ !function(){if(“undefined”!=typeof self&amp;&amp;self.Prism&amp;&amp;self.document){var e={html:”HTML”,xml:”XML”,svg:”SVG”,mathml:”MathML”,css:”CSS”,clike:”C-like”,javascript:”JavaScript”,abap:”ABAP”,actionscript:”ActionScript”,apacheconf:”Apache Configuration”,apl:”APL”,applescript:”AppleScript”,asciidoc:”AsciiDoc”,aspnet:”ASP.NET (C#)”,autoit:”AutoIt”,autohotkey:”AutoHotkey”,basic:”BASIC”,csharp:”C#”,cpp:”C++”,coffeescript:”CoffeeScript”,”css-extras”:”CSS Extras”,fsharp:”F#”,glsl:”GLSL”,http:”HTTP”,inform7:”Inform 7”,json:”JSON”,latex:”LaTeX”,lolcode:”LOLCODE”,matlab:”MATLAB”,mel:”MEL”,nasm:”NASM”,nginx:”nginx”,nsis:”NSIS”,objectivec:”Objective-C”,ocaml:”OCaml”,parigp:”PARI/GP”,php:”PHP”,”php-extras”:”PHP Extras”,powershell:”PowerShell”,jsx:”React JSX”,rest:”reST (reStructuredText)”,sas:”SAS”,sass:”Sass (Sass)”,scss:”Sass (Scss)”,sql:”SQL”,typescript:”TypeScript”,vhdl:”VHDL”,vim:”vim”,wiki:”Wiki markup”,yaml:”YAML”};Prism.hooks.add(“before-highlight”,function(s){var a=s.element.parentNode;if(a&amp;&amp;/pre/i.test(a.nodeName)){var t,i,r=a.getAttribute(“data-language”)||e[s.language]||s.language.substring(0,1).toUpperCase()+s.language.substring(1),l=a.previousSibling;l&amp;&amp;/\s<em>\bprism-show-language\b\s</em>/.test(l.className)&amp;&amp;l.firstChild&amp;&amp;/\s<em>\bprism-show-language-label\b\s</em>/.test(l.firstChild.className)?i=l.firstChild:(t=document.createElement(“div”),i=document.createElement(“div”),i.className=”prism-show-language-label”,t.className=”prism-show-language”,t.appendChild(i),a.parentNode.insertBefore(t,a)),i.innerHTML=r}})}}(); // ]]&gt; // &lt;![CDATA[ if (typeof MathJaxListener !== ‘undefined’) { MathJax.Hub.Register.StartupHook(‘End’, function () { MathJaxListener.invokeCallbackForKey_(‘End’); }); } // ]]&gt;</p>
-
-          
+          转自：http://www.ibm.com/developerworks/cn/linux/l-cn-nohup/ 我们经常会碰到这样的问题，用 telnet/ssh 登录了远程的 Linux 服务器，运行了一些耗时较长的任务， 结果却由于网络的不稳定导致任务中途失败。如何让命令提交后不受本地关闭终
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/01/29/linuxrunonbackground/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1420,24 +1137,15 @@ init─┬─Xvnc
       
         
           
-            <p>明天要给新队员讲树状数组，避不开的一个证明，之前教主讲过，当时没听明白给忘了- -，只有自己想了一种证明方法。 #####证明##### 大家都知道，计算机是用补码来存储一个数的，在这种编码情况下，整数是自然状态编码，假设我们是一个5位的机器（只是假设），那么1，编码就为00001, 而-1的编码则是11111(并不是10001)，在这种情况下，我们会有下面的结论： -x=11111 – x +1 (x 假设为正数二进制) —————–结论一 x=00000 + x (x 假设为正数二进制) ———————-结论二 我们还会有以下2个结论： 结论三：11111 - x 不会出现借位的情况(二进制下 ，对应位只会是两种情况 1-0 和 1-1) 结论四：00000 + x 不会出现进位的情况（二进制下，对应位只会是 0+1,0+0） 假设 x的二进制编码为 x1 x2 x3 x4 x5 那么我们就会发现 对于任何一位(以x1为例) 0+x1 和 1-x1 两个 必然是一个为1 一个为0，因为：</p>
-<p>X1的值</p>
-<p>0+x1</p>
-<p>1-x1</p>
-<p>0</p>
-<p>0</p>
-<p>1</p>
-<p>1</p>
-<p>1</p>
-<p>0</p>
-<p>有了上面的结论，<strong>我们把焦点放到x的最后几位</strong>，我们要分离的是最后一个1，那么假设是第i位xi是最后一个1，那么i位以后的每一位都是0，在这个基础上，根据上面这个表格，我们会发现，11111-x 这个值在第i位以后全部都是1，而第i位为0，整理一下，每一位如下：</p>
-<ol>
-<li>X的每一位为 x1 ,x2,…… xi-1, 1 ,0,0,0…. 后面每一位都是0</li>
-<li>11111-x 结果的每一位为 1-X1,1-X2,….1-Xi-1 ,0,1,1,1….. 后面每一位都是1</li>
-</ol>
-<p>下面这一点是关键 ，就是 –x = 11111-x +1, 也就是说-x的每一位是这样的： 1-X1,1-X2,….1-Xi-1 ,1,0,0,0….. 也就是说，最后一位+1 ，然后会变成0 一直往前进位到第i位，将第i位变成1后停止进位， 我们现在比较一下 x 和 –x的每一位的值， 会发现 ，<strong>除了第i位为一样的1，其余每一位都是不一样的</strong>即，都是一组0,1. 那么 X&amp;(-X)= 0,0,0….1, 0,0,0,…. <strong>除了第i位是1，其他每一位的值都是0</strong>， 而根据我们最开始所说的，<strong>X的第i位的1就是X当前二进制编码的最后一个1</strong>，所以通过 x &amp;(-x) 我们能够得到x的最后一个</p>
-
-          
+          明天要给新队员讲树状数组，避不开的一个证明，之前教主讲过，当时没听明白给忘了- -，只有自己想了一种证明方法。 #####证明##### 大家都知道，计算机是用补码来存储一个数的，在这种编码情况下，整数是自然状态编码，假设我们是一个5位的机器（只是假设），那么1，编码就为00001, 而-1的编码则
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/04/22/proof/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1577,14 +1285,15 @@ init─┬─Xvnc
       
         
           
-            <p>class base{<br>    public:<br>        int i,j;<br>        base(){<br>            i=j=0;<br>        }<br>        base(int a,int b){<br>            i=a;j=b;<br>        }<br>};<br>class derived:public base{<br>        public:<br>        derived(int a,int b){<br>             base(a,b);<br>        }<br>};    </p>
-<p>int main(){<br>　　derived d(3,1);<br>　　cout&lt;&lt;d.i&lt;&lt;” “&lt;&lt;d.j&lt;&lt;endl;<br>　　return 0;<br>}</p>
-<p>上面的这段代码会输出什么呢？！正确的答案是输出了”0 0”. 我的理解是，虽然其中调用了base(a,b) 但是其实操作的a和b不是当前d的a,b，其实是定义了一个新的base的对象。正确的写法应该是下面这样</p>
-<p>class base{<br>    public:<br>        int i,j;<br>        base(){<br>            i=j=0;<br>        }<br>        base(int a,int b){<br>            i=a;j=b;<br>        }<br>};<br>class dervied:public base{<br>        public:<br>        derived(int a,int b):base(a,b){</p>
-<pre><code>}  </code></pre><p>};    </p>
-<p>int main(){<br>　　derived d(3,1);<br>　　cout&lt;&lt;d.i&lt;&lt;” “&lt;&lt;d.j&lt;&lt;endl;<br>　　return 0;<br>}</p>
-
-          
+          class base{    public:        int i,j;        base(){            i=j=0;        }        base(int a,int b){            i=a;j=b;        }};class derived
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/04/05/cplusplus/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1724,9 +1433,15 @@ init─┬─Xvnc
       
         
           
-            <p><strong>关于c++构造函数两个误解</strong> 1.任何class只要没有定义构造函数，就会被编译器自动合成一个。 有些构造函数在实际中有和没有是没有任何用处的，所以无用的构造函数是不会被构建出来 2.编译器合成的构造函数，会为每个成员变量设定初始值 在我看来，编译器合成的构造函数，是为了调用成员类或者父类的构造函数，而这个成员类的构造函数的调用顺序则是按照申明的顺序来调用。</p>
-
-          
+          关于c++构造函数两个误解 1.任何class只要没有定义构造函数，就会被编译器自动合成一个。 有些构造函数在实际中有和没有是没有任何用处的，所以无用的构造函数是不会被构建出来 2.编译器合成的构造函数，会为每个成员变量设定初始值 在我看来，编译器合成的构造函数，是为了调用成员类或者父类的构造函数，
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/04/03/c-e9-bb-98-e8-ae-a4-e6-9e-84-e9-80-a0-e5-87-bd-e6-95-b0/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1866,88 +1581,16 @@ init─┬─Xvnc
       
         
           
-            <h1 id="1、assigned"><a href="#1、assigned" class="headerlink" title="1、assigned"></a>1、assigned</h1><p>主键由外部程序负责生成，在 save() 之前必须指定一个。Hibernate不负责维护主键生成。与Hibernate和底层数据库都无关，可以跨数据库。在存储对象前，必须要使用主键的setter方法给主键赋值，至于这个值怎么生成，完全由自己决定，这种方法应该尽量避免。</p>
-<p><strong>&lt;</strong>generator** class=”assigned” /&gt;**</p>
-<p>“ud”是自定义的策略名，人为起的名字，后面均用“ud”表示。 <strong>特点：可以跨数据库，人为控制主键生成，应尽量避免。</strong></p>
-<h1 id="2、increment"><a href="#2、increment" class="headerlink" title="2、increment"></a>2、increment</h1><p>由Hibernate从数据库中取出主键的最大值（每个session只取1次），以该值为基础，每次增量为1，在内存中生成主键，不依赖于底层的数据库，因此可以跨数据库。</p>
-<p>Hibernate调用org.hibernate.id.IncrementGenerator类里面的generate()方法，使用select max(idColumnName) from tableName语句获取主键最大值。该方法被声明成了synchronized，所以在一个独立的Java虚拟机内部是没有问题的，然而，在多个JVM同时并发访问数据库select max时就可能取出相同的值，再insert就会发生Dumplicate entry的错误。所以只能有一个Hibernate应用进程访问数据库，否则就可能产生主键冲突，所以不适合多进程并发更新数据库，适合单一进程访问数据库，不能用于群集环境。 官方文档：只有在没有其他进程往同一张表中插入数据时才能使用，在集群下不要使用。 <strong>特点：跨数据库，不适合多进程并发更新数据库，适合单一进程访问数据库，不能用于群集环境。</strong></p>
-<h1 id="3、hilo"><a href="#3、hilo" class="headerlink" title="3、hilo"></a>3、hilo</h1><p>hilo（高低位方式high low）是hibernate中最常用的一种生成方式，需要一张额外的表保存hi的值。保存hi值的表至少有一条记录（只与第一条记录有关），否则会出现错误。<strong>可以跨数据库。</strong></p>
-<p><strong>hibernate_hilo</strong></p>
-<p><strong>next_hi</strong></p>
-<p><strong>100</strong></p>
-<p><strong>hibernate_hilo **</strong>指定保存hi值的表名** <strong>next_hi **</strong>指定保存hi值的列名** <strong>100 **</strong>指定低位的最大值** 也可以省略table和column配置，其默认的表为hibernate_unique_key，列为next_hi</p>
-<p><strong>100</strong></p>
-<p>hilo生成器生成主键的过程（以hibernate_unique_key表，next_hi列为例）： 1. 获得hi值：读取并记录数据库的hibernate_unique_key表中next_hi字段的值，数据库中此字段值加1保存。 2. 获得lo值：从0到max_lo循环取值，差值为1，当值为max_lo值时，重新获取hi值，然后lo值继续从0到max_lo循环。 3. 根据公式 hi * (max_lo + 1) + lo计算生成主键值。 注意：当hi值是0的时候，那么第一个值不是0<em>(max_lo+1)+0=0，而是lo跳过0从1开始，直接是1、2、3…… 那max_lo配置多大合适呢？ 这要根据具体情况而定，如果系统一般不重启，而且需要用此表建立大量的主键，可以吧max_lo配置大一点，这样可以减少读取数据表的次数，提高效率；反之，如果服务器经常重启，可以吧max_lo配置小一点，可以避免每次重启主键之间的间隔太大，造成主键值主键不连贯。 *</em>特点：跨数据库，hilo算法生成的标志只能在一个数据库中保证唯一。**</p>
-<h1 id="4、seqhilo"><a href="#4、seqhilo" class="headerlink" title="4、seqhilo"></a>4、seqhilo</h1><p>与hilo类似，通过hi/lo算法实现的主键生成机制，只是将hilo中的数据表换成了序列sequence，需要数据库中先创建sequence，适用于支持sequence的数据库，如Oracle。</p>
-<p><strong>hibernate_seq</strong></p>
-<p><strong>100</strong></p>
-<p><strong>特点：与hilo类似，只能在支持序列的数据库中使用。</strong></p>
-<h1 id="5、sequence"><a href="#5、sequence" class="headerlink" title="5、sequence"></a>5、sequence</h1><p>采用数据库提供的sequence机制生成主键，需要数据库支持sequence。如oralce、DB、SAP DB、PostgerSQL、McKoi中的sequence。MySQL这种不支持sequence的数据库则不行（可以使用identity）。</p>
-<p><strong>hibernate_id</strong> </p>
-<p><strong>hibernate_id</strong> <strong>指定sequence的名称</strong> Hibernate生成主键时，查找sequence并赋给主键值，主键值由数据库生成，Hibernate不负责维护，使用时必须先创建一个sequence，如果不指定sequence名称，则使用Hibernate默认的sequence，名称为hibernate_sequence，前提要在数据库中创建该sequence。 <strong>特点：只能在支持序列的数据库中使用，如Oracle。</strong></p>
-<h1 id="6、identity"><a href="#6、identity" class="headerlink" title="6、identity"></a>6、identity</h1><p>identity由底层数据库生成标识符。identity是由数据库自己生成的，但这个主键必须设置为自增长，使用identity的前提条件是底层数据库支持自动增长字段类型，如DB2、SQL Server、MySQL、Sybase和HypersonicSQL等，Oracle这类没有自增字段的则不支持。</p>
-<p>例：如果使用MySQL数据库，则主键字段必须设置成auto_increment。 id int(11) primary key auto_increment <strong>特点：只能用在支持自动增长的字段数据库中使用，如MySQL。</strong></p>
-<h1 id="7、native"><a href="#7、native" class="headerlink" title="7、native"></a>7、native</h1><p>native由hibernate根据使用的数据库自行判断采用identity、hilo、sequence其中一种作为主键生成方式，灵活性很强。如果能支持identity则使用identity，如果支持sequence则使用sequence。</p>
-<p>例如MySQL使用identity，Oracle使用sequence 注意：如果Hibernate自动选择sequence或者hilo，则所有的表的主键都会从Hibernate默认的sequence或hilo表中取。并且，有的数据库对于默认情况主键生成测试的支持，效率并不是很高。 使用sequence或hilo时，可以加入参数，指定sequence名称或hi值表名称等，如 <strong>hibernate_id</strong> <strong>特点：根据数据库自动选择，项目中如果用到多个数据库时，可以使用这种方式，使用时需要设置表的自增字段或建立序列，建立表等。</strong></p>
-<h1 id="8、uuid"><a href="#8、uuid" class="headerlink" title="8、uuid"></a>8、uuid</h1><p>UUID：Universally Unique Identifier，是指在一台机器上生成的数字，它保证对在同一时空中的所有机器都是唯一的。按照开放软件基金会(OSF)制定的标准计算，用到了以太网卡地址、纳秒级时间、芯片ID码和许多可能的数字，标准的UUID格式为： <strong>xxxxxxxx-xxxx-xxxx-xxxxxx-xxxxxxxxxx (8-4-4-4-12)</strong> 其中每个 <strong>x</strong> 是 0-9 或 a-f 范围内的一个十六进制的数字。</p>
-<p>Hibernate在保存对象时，生成一个UUID字符串作为主键，保证了唯一性，但其并无任何业务逻辑意义，只能作为主键，唯一缺点长度较大，32位（Hibernate将UUID中间的“-”删除了）的字符串，占用存储空间大，但是有两个很重要的优点，Hibernate在维护主键时，不用去数据库查询，从而提高效率，而且它是跨数据库的，以后切换数据库极其方便。 <strong>特点：uuid长度大，占用空间大，跨数据库，不用访问数据库就生成主键值，所以效率高且能保证唯一性，移植非常方便，推荐使用。</strong></p>
-<h1 id="9、guid"><a href="#9、guid" class="headerlink" title="9、guid"></a>9、guid</h1><p>GUID：Globally Unique Identifier全球唯一标识符，也称作 UUID，是一个128位长的数字，用16进制表示。算法的核心思想是结合机器的网卡、当地时间、一个随即数来生成GUID。从理论上讲，如果一台机器每秒产生10000000个GUID，则可以保证（概率意义上）3240年不重复。</p>
-<p>Hibernate在维护主键时，先查询数据库，获得一个uuid字符串，该字符串就是主键值，该值唯一，缺点长度较大，支持数据库有限，优点同uuid，跨数据库，但是仍然需要访问数据库。 <strong>注意：长度因数据库不同而不同</strong> MySQL中使用select uuid()语句获得的为36位（包含标准格式的“-”） Oracle中，使用select rawtohex(sys_guid()) from dual语句获得的为32位（不包含“-”）  <strong>特点：需要数据库支持查询uuid，生成时需要查询数据库，效率没有uuid高，推荐使用uuid。</strong></p>
-<h1 id="10、foreign"><a href="#10、foreign" class="headerlink" title="10、foreign"></a>10、foreign</h1><p>使用另外一个相关联的对象的主键作为该对象主键。主要用于一对一关系中。</p>
-<p><strong>user</strong></p>
-<p>该例使用domain.User的主键作为本类映射的主键。 <strong>特点：很少使用，大多用在一对一关系中。</strong></p>
-<h1 id="11、select"><a href="#11、select" class="headerlink" title="11、select"></a>11、select</h1><p>使用触发器生成主键，主要用于早期的数据库主键生成机制，能用到的地方非常少。</p>
-<h1 id="12、其他注释方式配置"><a href="#12、其他注释方式配置" class="headerlink" title="12、其他注释方式配置"></a>12、其他注释方式配置</h1><p>注释方式与配置文件底层实现方式相同，只是配置的方式换成了注释方式 自动增长，适用于支持自增字段的数据库</p>
-<p><strong>@Id</strong></p>
-<p><strong>@GeneratedValue(strategy = GenerationType.<em>IDENTITY</em>)</strong></p>
-<p>根据底层数据库自动选择方式，需要底层数据库的设置 如MySQL，会使用自增字段，需要将主键设置成auto_increment。</p>
-<p><strong>@Id</strong></p>
-<p><strong>@GeneratedValue(strategy = GenerationType.<em>AUTO</em>)</strong></p>
-<p>使用表存储生成的主键，可以跨数据库。 每次需要主键值时，查询名为<strong>“hibernate_table”</strong>的表，查找主键列<strong>“gen_pk”</strong>值为<strong>“2”</strong>记录，得到这条记录的<strong>“gen_val”</strong>值，根据这个值，和<strong>allocationSize</strong>的值生成主键值。</p>
-<p><strong>@Id</strong></p>
-<p><strong>@GeneratedValue(strategy = GenerationType.<em>TABLE</em>, generator = “ud”)</strong></p>
-<p><strong>@TableGenerator(name = “ud”,</strong></p>
-<p><strong>table = “hibernate_table”,</strong></p>
-<p><strong>pkColumnName = “gen_pk”,</strong></p>
-<p><strong>pkColumnValue = “2”,</strong></p>
-<p><strong>valueColumnName = “gen_val”,</strong></p>
-<p><strong>initialValue = 2,</strong></p>
-<p><strong>allocationSize = 5)</strong></p>
-<p>使用序列存储主键值</p>
-<p><strong>@Id</strong></p>
-<p><strong>@GeneratedValue(strategy = GenerationType.<em>SEQUENCE</em>, generator = “ud”)</strong></p>
-<p><strong>@SequenceGenerator(name = “ud”,</strong></p>
-<p><strong>sequenceName = “hibernate_seq”,</strong></p>
-<p><strong>allocationSize = 1,</strong></p>
-<p><strong>initialValue = 2)</strong></p>
-<h1 id="13、小结"><a href="#13、小结" class="headerlink" title="13、小结"></a>13、小结</h1><p><strong>1**</strong>、为了保证对象标识符的唯一性与不可变性，应该让Hibernate来为主键赋值，而不是程序。** <strong>2**</strong>、正常使用Hibernate维护主键，最好将主键的setter方法设置成private，从而避免人为或程序修改主键，而使用assigned方式，就不能用private，否则无法给主键赋值。** <strong>2、Hibernate中唯一一种最简单通用的主键生成器就是uuid。虽然是个32位难读的长字符串，但是它没有跨数据库的问题，将来切换数据库极其简单方便，推荐使用！</strong> <strong>3、自动增长字段类型与序列</strong></p>
-<p><strong>数据库</strong></p>
-<p><strong>自动增长字段</strong></p>
-<p><strong>序列</strong></p>
-<p><strong>MySQL</strong></p>
-<p><strong>是</strong></p>
-<p><strong>Oracle</strong></p>
-<p><strong>是</strong></p>
-<p><strong>DB2</strong></p>
-<p><strong>是</strong></p>
-<p><strong>是</strong></p>
-<p><strong>MS SQL Server</strong></p>
-<p><strong>是</strong></p>
-<p><strong>Sybase</strong></p>
-<p><strong>是</strong></p>
-<p><strong>HypersonicSQL</strong></p>
-<p><strong>是</strong></p>
-<p><strong>PostgreSQL</strong></p>
-<p><strong>是</strong></p>
-<p><strong>SAP DB</strong></p>
-<p><strong>是</strong></p>
-<p><strong>HSQLDB</strong></p>
-<p><strong>是</strong></p>
-<p><strong>Infomix</strong></p>
-<p><strong>是</strong></p>
-<p><strong>4、关于hilo机制注意：</strong> <strong>hilo算法生成的标志只能在一个数据库中保证唯一。</strong> <strong>当用户为Hibernate自行提供连接，或者Hibernate通过JTA，从应用服务器的数据源获取数据库连接时，无法使用hilo，因为这不能保证hilo单独在新的数据库连接的事务中访问hi值表，这种情况，如果数据库支持序列，可以使用seqhilo。</strong> <strong>5、使用identity、native、GenerationType.AUTO等方式生成主键时，只要用到自增字段，数据库表的字段必须设置成自动增加的，否则出错。</strong> <strong>6、还有一些方法未列出来，例如uuid.hex，sequence-identity等，这些方法不是很常用，且已被其他方法代替，如uuid.hex，官方文档里建议不使用，而直接使用uuid方法。</strong> <strong>7、Hibernate的各版本主键生成策略配置有略微差别，但实现基本相同。如，有的版本默认sequence不指定序列名，则使用名为hibernate_sequence的序列，有的版本则必须指定序列名。</strong> <strong>8、还可以自定义主键生成策略，这里暂时不讨论，只讨论官方自带生成策略。</strong>   转自：<a href="http://www.cnblogs.com/kakafra/archive/2012/09/16/2687569.html" target="_blank" rel="noopener">http://www.cnblogs.com/kakafra/archive/2012/09/16/2687569.html</a></p>
-
-          
+          1、assigned主键由外部程序负责生成，在 save() 之前必须指定一个。Hibernate不负责维护主键生成。与Hibernate和底层数据库都无关，可以跨数据库。在存储对象前，必须要使用主键的setter方法给主键赋值，至于这个值怎么生成，完全由自己决定，这种方法应该尽量避免。
+&lt;g
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2087,10 +1730,16 @@ init─┬─Xvnc
       
         
           
-            <p>1.常见的错误返回类型</p>
-<p>VOID/BOOL/HANDLE/PVOID/LONG/DWORD VOID 不可能失败 BOOL 错误返回false 编码的时候最好测试是否不为FALSE HANDLE 错误 NULL/INVALID_HANDLE_VALUE PVOID  失败返回NULL,成功返回一个数据块的地址 LONG/DWORD 0或-1，不绝对 2.GetLastError函数   DWORD GetLastError(); 3.WinError.h 头文件定义了若干的Mircosoft定义的代码列表 4.</p>
-
-          
+          1.常见的错误返回类型
+VOID/BOOL/HANDLE/PVOID/LONG/DWORD VOID 不可能失败 BOOL 错误返回false 编码的时候最好测试是否不为FALSE HANDLE 错误 NULL/INVALID_HANDLE_VALUE PVOID  失败返回NULL,成功返回一个数
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2243,6 +1892,8 @@ init─┬─Xvnc
       
         <div class="back-to-top">
           <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
           
         </div>
       
