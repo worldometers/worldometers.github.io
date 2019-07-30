@@ -345,6 +345,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2014/09/06/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-bf-ad-e4-bb-a3-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e7-bb-84-e5-90-88-e6-a8-a1-e5-bc-8f/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2014/09/06/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-bf-ad-e4-bb-a3-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e7-bb-84-e5-90-88-e6-a8-a1-e5-bc-8f/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -474,6 +484,13 @@ public boolean hasNext()
 
 
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
 
   
 
@@ -758,6 +775,43 @@ public boolean hasNext()
 
 
 
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xtestw',
+            repo: 'xtestw.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'a9c003726fcdec4f8a58716dd939d7b257c6b72c',
+            
+                client_id: '76ac809eebae5aded61d'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
 
 
 

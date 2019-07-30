@@ -345,6 +345,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -435,6 +445,13 @@
 
 
           
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
 
   
 
@@ -719,6 +736,43 @@
 
 
 
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xtestw',
+            repo: 'xtestw.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'a9c003726fcdec4f8a58716dd939d7b257c6b72c',
+            
+                client_id: '76ac809eebae5aded61d'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
 
 
 
