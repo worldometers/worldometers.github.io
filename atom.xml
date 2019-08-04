@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://xtestw.com/"/>
-  <updated>2019-08-04T15:19:00.719Z</updated>
+  <updated>2019-08-04T15:20:14.039Z</updated>
   <id>http://xtestw.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://xtestw.com/2019/08/03/GraphQl-%E4%BD%BF%E7%94%A8-java/"/>
     <id>http://xtestw.com/2019/08/03/GraphQl-使用-java/</id>
     <published>2019-08-03T06:26:05.000Z</published>
-    <updated>2019-08-04T15:19:00.719Z</updated>
+    <updated>2019-08-04T15:20:14.039Z</updated>
     
     <summary type="html">
     
@@ -40,7 +40,11 @@
       <category term="New Skill" scheme="http://xtestw.com/categories/GraphQL/Java/New-Skill/"/>
     
     
-      <category term="graphql, graphiql, github" scheme="http://xtestw.com/tags/graphql-graphiql-github/"/>
+      <category term="graphql" scheme="http://xtestw.com/tags/graphql/"/>
+    
+      <category term="graphiql" scheme="http://xtestw.com/tags/graphiql/"/>
+    
+      <category term="github" scheme="http://xtestw.com/tags/github/"/>
     
   </entry>
   
