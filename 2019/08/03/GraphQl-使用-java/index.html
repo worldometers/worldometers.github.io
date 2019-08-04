@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="graphql, graphiql, github,">
+
+
+
+
+  
+
+
+  <link rel="alternate" href="/atom.xml" title="XtestW's Blog" type="application/atom+xml">
+
+
+
+
+
+
+<meta name="description" content="去年在做内容库的时候，涉及到了多系统多数据源互相查询的情景，当时就想要将内容库的所有数据，增加统一的数据接入层，通过graphql的方式提供给上层业务使用，后面受限于人力没有实施。目前从头开始做站群相关的业务，顺带着浅尝了一下graphql，感觉还不错。 GraphQL 是什么 GraphQL is a query language for APIs and a runtime for fulfi">
+<meta name="keywords" content="graphql, graphiql, github">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XtestW&#39;s Blog">
+<meta property="og:url" content="http://xtestw.com/2019/08/03/GraphQl-使用-java/index.html">
+<meta property="og:site_name" content="XtestW&#39;s Blog">
+<meta property="og:description" content="去年在做内容库的时候，涉及到了多系统多数据源互相查询的情景，当时就想要将内容库的所有数据，增加统一的数据接入层，通过graphql的方式提供给上层业务使用，后面受限于人力没有实施。目前从头开始做站群相关的业务，顺带着浅尝了一下graphql，感觉还不错。 GraphQL 是什么 GraphQL is a query language for APIs and a runtime for fulfi">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="http://xtestw.com/var/folders/84/6jh1114j4rx6m0b5h4w5_45h0000gn/T/abnerworks.Typora/image-20190804164253298.png">
+<meta property="og:image" content="http://xtestw.com/var/folders/84/6jh1114j4rx6m0b5h4w5_45h0000gn/T/abnerworks.Typora/image-20190804164354974.png">
+<meta property="og:image" content="http://xtestw.com/var/folders/84/6jh1114j4rx6m0b5h4w5_45h0000gn/T/abnerworks.Typora/image-20190804164517506.png">
+<meta property="og:updated_time" content="2019-08-04T15:04:43.685Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XtestW&#39;s Blog">
+<meta name="twitter:description" content="去年在做内容库的时候，涉及到了多系统多数据源互相查询的情景，当时就想要将内容库的所有数据，增加统一的数据接入层，通过graphql的方式提供给上层业务使用，后面受限于人力没有实施。目前从头开始做站群相关的业务，顺带着浅尝了一下graphql，感觉还不错。 GraphQL 是什么 GraphQL is a query language for APIs and a runtime for fulfi">
+<meta name="twitter:image" content="http://xtestw.com/var/folders/84/6jh1114j4rx6m0b5h4w5_45h0000gn/T/abnerworks.Typora/image-20190804164253298.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xtestw.com/2019/08/03/GraphQl-使用-java/">
+
+
+
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-pub-1217509255829092",
+      enable_page_level_ads: true
+    });
+  </script>
+
+
+  <title> | XtestW's Blog</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-144813087-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="default">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">XtestW's Blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://xtestw.com/2019/08/03/GraphQl-使用-java/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="xtestw">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="XtestW's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline"></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-03T14:26:05+08:00">
+                2019-08-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GraphQL/" itemprop="url" rel="index">
+                    <span itemprop="name">GraphQL</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GraphQL/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+                  , 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GraphQL/Java/New-Skill/" itemprop="url" rel="index">
+                    <span itemprop="name">New Skill</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/03/GraphQl-使用-java/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/08/03/GraphQl-使用-java/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>去年在做内容库的时候，涉及到了多系统多数据源互相查询的情景，当时就想要将内容库的所有数据，增加统一的数据接入层，通过graphql的方式提供给上层业务使用，后面受限于人力没有实施。目前从头开始做站群相关的业务，顺带着浅尝了一下graphql，感觉还不错。</p>
+<h2 id="GraphQL-是什么"><a href="#GraphQL-是什么" class="headerlink" title="GraphQL 是什么"></a>GraphQL 是什么</h2><blockquote>
+<p>GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data. GraphQL provides a complete and understandable description of the data in your API, gives clients the power to ask for exactly what they need and nothing more, makes it easier to evolve APIs over time, and enables powerful developer tools.</p>
+</blockquote>
+<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>参看:  <a href="https://www.youtube.com/watch?v=Ah6GSCK5Rfs" target="_blank" rel="noopener">https://www.youtube.com/watch?v=Ah6GSCK5Rfs</a></p>
+<p>graphql 和 rest api 是同一层的东西，都是一种基于 http 之上的数据接口协议，两者设计理念完全不同。目前来说 graphql 在很多大小厂也都开始使用，确实会方便很多。 但是 rest api 还是最广泛应用的协议，比如 AMP (T T)。 事实上任何东西都有2面性，对于graphql 来说，优缺点都有</p>
+<h3 id="与-REST-API-相比的好处"><a href="#与-REST-API-相比的好处" class="headerlink" title="与 REST API 相比的好处"></a>与 REST API 相比的好处</h3><ul>
+<li>优点<ul>
+<li>一次提供，多次使用<ul>
+<li>作为后端，我们只需要关心数据字段的提供，不需要关心前端是怎么用这些字段，页面结构是怎样的</li>
+<li>真的不需要频繁的对接口了</li>
+</ul>
+</li>
+<li>动态可扩展，无冗余查询，所见即所得<ul>
+<li>因为前端只会请求需要的字段，增加新的字段后，不用担心老的业务请求这些冗余数据，很好的支撑了可扩展性</li>
+<li>所见鸡所得，能够帮助客户端代码不易出错</li>
+</ul>
+</li>
+<li>多个字段，一次请求<ul>
+<li>对于前端来说，面向schema编程，无需知道后端是多少个服务在支撑需要的这些字段，也无需频繁的更改接口去从新服务获取想要的字段，只需要在请求的时候增加一个 field 就好了</li>
+</ul>
+</li>
+<li>代码即文档<ul>
+<li>直接通过graphqli 等工具查看schema协议，不需要文档，写注释就好了</li>
+</ul>
+</li>
+<li>类型校验<ul>
+<li>在定义好schema的同时，就约束了接口类型，graphql支持强类型校验</li>
+</ul>
+</li>
+<li>…</li>
+</ul>
+</li>
+<li>缺点<ul>
+<li>基于post 请求<ul>
+<li>传统方式无法监控(nginx)</li>
+<li>不能利用 http 自身的缓存机制</li>
+</ul>
+</li>
+<li>没有充分利用http<ul>
+<li>只使用了 post 请求，没有其他http的方法：方法的幂等性</li>
+<li>缺失了http状态码</li>
+</ul>
+</li>
+<li>配套还不完善<ul>
+<li>微服务</li>
+<li>监控</li>
+<li>分流</li>
+</ul>
+</li>
+<li>…</li>
+</ul>
+</li>
+</ul>
+<h2 id="怎么用"><a href="#怎么用" class="headerlink" title="怎么用"></a>怎么用</h2><h3 id="几个基本概念"><a href="#几个基本概念" class="headerlink" title="几个基本概念"></a>几个基本概念</h3><p>最好参看官方文档：<a href="https://graphql.github.io/graphql-spec/June2018/" target="_blank" rel="noopener">https://graphql.github.io/graphql-spec/June2018/</a></p>
+<p>中文版的可以查看：<a href="https://spec.graphql.cn/#sec-Overview-" target="_blank" rel="noopener">https://spec.graphql.cn/#sec-Overview-</a></p>
+<p>概念很多，摘了几个出来，在实际业务场景中使用的话，还是有很多需要探的地方，这里只是大概的一个介绍</p>
+<ul>
+<li>schema<ul>
+<li>相当于协议文件，定义了所有对象的类型和查询接口</li>
+<li>一般定义的操作是2个： query/ mutation , 一个用于读，一个用于写，也存在subscription的操作</li>
+</ul>
+</li>
+<li>type<ul>
+<li>graphql 有自己的一套类型系统，有8种类型<ul>
+<li>scalars/标量</li>
+<li>objects/对象</li>
+<li>interfaces/接口</li>
+<li>unions/联合</li>
+<li>Enums/枚举</li>
+<li>Input objects/输入类型</li>
+<li>lists/列表</li>
+<li>Non-null/非空型</li>
+</ul>
+</li>
+<li>graphql 有自己的基本类型，也可以自定义一些类型，但是需要相应的解释器</li>
+</ul>
+</li>
+<li>内省 -&gt; 验证 -&gt; 执行 -&gt; 响应</li>
+<li>datafetcher<ul>
+<li>实现过程中，定义了字段的获取方法</li>
+</ul>
+</li>
+</ul>
+<h3 id="实操"><a href="#实操" class="headerlink" title="实操"></a>实操</h3><p>具体的代码可以参看： <a href="https://github.com/xtestw/graphql-demo" target="_blank" rel="noopener">https://github.com/xtestw/graphql-demo</a></p>
+<ul>
+<li><p>引入 graphql 的依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;com.graphql-java&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;graphql-java&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;13.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>定义 schema 文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">schema &#123;</span><br><span class="line">  query: Query</span><br><span class="line">  mutation: Mutation</span><br><span class="line">&#125;</span><br><span class="line">scalar Date</span><br><span class="line"></span><br><span class="line">type Query &#123;</span><br><span class="line">  student(id:Int!):Student</span><br><span class="line">  students(pagination:Pagination):[Student]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Mutation &#123;</span><br><span class="line">  add(newStudent:NewStudent):Student</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">input Pagination&#123;</span><br><span class="line">  index: Int!</span><br><span class="line">  size: Int!</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">input NewStudent&#123;</span><br><span class="line">  name:String!</span><br><span class="line">  sex:Sex</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type Student &#123;</span><br><span class="line">  id: Int</span><br><span class="line">  name: String</span><br><span class="line">  sex: Sex</span><br><span class="line">  creation: Date</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">enum Sex&#123;</span><br><span class="line">  MALE,FEMALE</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>实现 schema 文件</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xtestw.graphql.demo.schema.wiring;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.ImmutableMap;</span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.schema.model.NewStudent;</span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.schema.model.Pagination;</span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.storage.Student;</span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.storage.Student.Sex;</span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.storage.repository.StudentRepository;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.DataFetchingEnvironment;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.MapEnumValuesProvider;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.TypeRuntimeWiring;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.TypeRuntimeWiring.Builder;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Component;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Create by xuwei on 2019/8/4</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentWiring</span> <span class="keyword">implements</span> <span class="title">Wiring</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Autowired</span></span><br><span class="line">  StudentRepository studentRepository;</span><br><span class="line">  ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> List&lt;TypeRuntimeWiring&gt; <span class="title">wireTypes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Collections.singletonList(</span><br><span class="line">        TypeRuntimeWiring.newTypeWiring(<span class="string">"Sex"</span>)</span><br><span class="line">            .enumValues(<span class="keyword">new</span> MapEnumValuesProvider(</span><br><span class="line">                ImmutableMap.of(</span><br><span class="line">                    <span class="string">"MALE"</span>, Sex.MALE,</span><br><span class="line">                    <span class="string">"FEMALE"</span>, Sex.FEMALE</span><br><span class="line">                )))</span><br><span class="line">            .build());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">wireQueries</span><span class="params">(Builder queryBuilder)</span> </span>&#123;</span><br><span class="line">    queryBuilder.dataFetcher(<span class="string">"student"</span>, <span class="keyword">this</span>::fetchStudentById)</span><br><span class="line">        .dataFetcher(<span class="string">"students"</span>, <span class="keyword">this</span>::fetchStudents);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> List&lt;Student&gt; <span class="title">fetchStudents</span><span class="params">(DataFetchingEnvironment dataFetchingEnvironment)</span> </span>&#123;</span><br><span class="line">    Pagination pagination = mapper</span><br><span class="line">        .convertValue(dataFetchingEnvironment.getArgument(<span class="string">"pagination"</span>), Pagination.class);</span><br><span class="line">    <span class="keyword">if</span> (pagination == <span class="keyword">null</span>) &#123;</span><br><span class="line">      pagination = Pagination.create(<span class="number">0</span>, <span class="number">20</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> studentRepository.findAll(pagination.toPageable()).getContent();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Student <span class="title">fetchStudentById</span><span class="params">(DataFetchingEnvironment dataFetchingEnvironment)</span> </span>&#123;</span><br><span class="line">    Integer id = dataFetchingEnvironment.getArgument(<span class="string">"id"</span>);</span><br><span class="line">    <span class="keyword">return</span> studentRepository.findById(id).orElse(<span class="keyword">null</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">wireMutations</span><span class="params">(Builder mutationBuilder)</span> </span>&#123;</span><br><span class="line">    mutationBuilder.dataFetcher(<span class="string">"add"</span>, <span class="keyword">this</span>::addNewStudent);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Student <span class="title">addNewStudent</span><span class="params">(DataFetchingEnvironment dataFetchingEnvironment)</span> </span>&#123;</span><br><span class="line">    NewStudent newStudent = mapper</span><br><span class="line">        .convertValue(dataFetchingEnvironment.getArgument(<span class="string">"newStudent"</span>), NewStudent.class);</span><br><span class="line">    <span class="keyword">return</span> studentRepository.save(newStudent.toStudent());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li>构建 GraphqQL 对象实例</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xtestw.graphql.demo.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.schema.ExtendedScalars;</span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.schema.wiring.Wiring;</span><br><span class="line"><span class="keyword">import</span> graphql.GraphQL;</span><br><span class="line"><span class="keyword">import</span> graphql.GraphQLException;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.GraphQLScalarType;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.GraphQLSchema;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.RuntimeWiring;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.SchemaGenerator;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.SchemaParser;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.TypeDefinitionRegistry;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.TypeRuntimeWiring;</span><br><span class="line"><span class="keyword">import</span> graphql.schema.idl.errors.SchemaProblem;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"><span class="keyword">import</span> java.util.stream.Collectors;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.Resource;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Create by xuwei on 2019/8/3</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GraphQLConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Value</span>(<span class="string">"classpath*:schemas/*.graphqls"</span>)</span><br><span class="line">  <span class="keyword">private</span> Resource[] files;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function">GraphQL <span class="title">graphQL</span><span class="params">(@Autowired GraphQLSchema graphQLSchema)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> GraphQL.newGraphQL(graphQLSchema)</span><br><span class="line">        .build();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function">GraphQLSchema <span class="title">graphQLSchema</span><span class="params">(@Autowired RuntimeWiring wiring)</span> </span>&#123;</span><br><span class="line">    SchemaParser parser = <span class="keyword">new</span> SchemaParser();</span><br><span class="line">    TypeDefinitionRegistry typeDefinitionRegistry = Arrays.stream(files).map(file -&gt; &#123;</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> file.getInputStream();</span><br><span class="line">      &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        log.error(<span class="string">"Load graphql file error: &#123;&#125; - &#123;&#125;"</span>, file, e);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;).filter(Objects::nonNull)</span><br><span class="line">        .map(inputStream -&gt; &#123;</span><br><span class="line">          <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> parser.parse(<span class="keyword">new</span> InputStreamReader(inputStream));</span><br><span class="line">          &#125; <span class="keyword">catch</span> (SchemaProblem e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> GraphQLException(</span><br><span class="line">                String.format(<span class="string">"Compile schema '%s' failed: %s"</span>, inputStream,</span><br><span class="line">                    e.getErrors().stream().map(Object::toString).collect(Collectors.toList())), e);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;).reduce(<span class="keyword">new</span> TypeDefinitionRegistry(), (all, cur) -&gt; &#123;</span><br><span class="line">          all.merge(cur);</span><br><span class="line">          <span class="keyword">return</span> all;</span><br><span class="line">        &#125;);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> SchemaGenerator().makeExecutableSchema(typeDefinitionRegistry, wiring);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function">RuntimeWiring <span class="title">wiring</span><span class="params">(@Autowired List&lt;GraphQLScalarType&gt; scalarTypes,</span></span></span><br><span class="line"><span class="function"><span class="params">      @Autowired List&lt;TypeRuntimeWiring&gt; types)</span> </span>&#123;</span><br><span class="line">    RuntimeWiring.Builder builder = RuntimeWiring.newRuntimeWiring();</span><br><span class="line">    <span class="keyword">if</span> (scalarTypes != <span class="keyword">null</span>) &#123;</span><br><span class="line">      scalarTypes.forEach(builder::scalar);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (types != <span class="keyword">null</span>) &#123;</span><br><span class="line">      types.forEach(builder::type);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> builder.build();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function">List&lt;GraphQLScalarType&gt; <span class="title">scalarTypes</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Collections.singletonList(ExtendedScalars.GraphQLDate);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="function">List&lt;TypeRuntimeWiring&gt; <span class="title">types</span><span class="params">(@Autowired List&lt;Wiring&gt; wirings)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    TypeRuntimeWiring.Builder queryBuilder = TypeRuntimeWiring.newTypeWiring(<span class="string">"Query"</span>);</span><br><span class="line">    TypeRuntimeWiring.Builder mutationBuilder = TypeRuntimeWiring.newTypeWiring(<span class="string">"Mutation"</span>);</span><br><span class="line">    <span class="keyword">return</span> wirings.stream().map(wiring -&gt; &#123;</span><br><span class="line">      wiring.wireQueries(queryBuilder);</span><br><span class="line">      wiring.wireMutations(mutationBuilder);</span><br><span class="line">      <span class="keyword">return</span> wiring.wireTypes();</span><br><span class="line">    &#125;)</span><br><span class="line">        .reduce(<span class="keyword">new</span> ArrayList&lt;&gt;(Arrays.asList(queryBuilder.build(), mutationBuilder.build())),</span><br><span class="line">            (all, cur) -&gt; &#123;</span><br><span class="line">              all.addAll(cur);</span><br><span class="line">              <span class="keyword">return</span> all;</span><br><span class="line">            &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>定义接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.xtestw.graphql.demo.controller;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.JsonNode;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.ObjectMapper;</span><br><span class="line"><span class="keyword">import</span> com.fasterxml.jackson.databind.type.MapType;</span><br><span class="line"><span class="keyword">import</span> com.xtestw.graphql.demo.schema.model.Query;</span><br><span class="line"><span class="keyword">import</span> graphql.GraphQL;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> javax.annotation.Resource;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.CrossOrigin;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.PostMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestBody;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Create by xuwei on 2019/8/3</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@Slf</span>4j</span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/graphql"</span>)</span><br><span class="line"><span class="meta">@CrossOrigin</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">GraphQLController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Resource</span></span><br><span class="line">  GraphQL graphQL;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@PostMapping</span>(path = &#123;<span class="string">""</span>&#125;)</span><br><span class="line">  <span class="function"><span class="keyword">private</span> Object <span class="title">query</span><span class="params">(@RequestBody String queryStr)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    Query query = getQuery(queryStr);</span><br><span class="line">    <span class="keyword">return</span> graphQL.execute(query.toExecutionInput());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> ObjectMapper mapper = <span class="keyword">new</span> ObjectMapper();</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> MapType VARIABLES_TYPE = mapper.getTypeFactory()</span><br><span class="line">      .constructMapType(HashMap.class,</span><br><span class="line">          String.class, Object.class);</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Query <span class="title">getQuery</span><span class="params">(String queryText)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    String operationName = <span class="keyword">null</span>;</span><br><span class="line">    String fullQueryText = queryText;</span><br><span class="line">    Map&lt;String, Object&gt; variables = <span class="keyword">null</span>;</span><br><span class="line">    JsonNode jsonBody = mapper.readTree(queryText);</span><br><span class="line">    <span class="keyword">if</span> (jsonBody != <span class="keyword">null</span>) &#123;</span><br><span class="line">      JsonNode queryNode = jsonBody.get(<span class="string">"query"</span>);</span><br><span class="line">      <span class="keyword">if</span> (queryNode != <span class="keyword">null</span> &amp;&amp; queryNode.isTextual()) &#123;</span><br><span class="line">        queryText = queryNode.asText();</span><br><span class="line">      &#125;</span><br><span class="line">      JsonNode operationNameNode = jsonBody.get(<span class="string">"operationName"</span>);</span><br><span class="line">      <span class="keyword">if</span> (operationNameNode != <span class="keyword">null</span> &amp;&amp; operationNameNode.isTextual()) &#123;</span><br><span class="line">        operationName = operationNameNode.asText();</span><br><span class="line">      &#125;</span><br><span class="line">      JsonNode variablesNode = jsonBody.get(<span class="string">"variables"</span>);</span><br><span class="line">      <span class="keyword">if</span> (variablesNode != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (variablesNode.isTextual()) &#123;</span><br><span class="line">          String variablesJson = variablesNode.asText();</span><br><span class="line">          variables = mapper.convertValue(mapper.readTree(variablesJson), VARIABLES_TYPE);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (variablesNode.isObject()) &#123;</span><br><span class="line">          variables = mapper.convertValue(variablesNode, VARIABLES_TYPE);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (variables == <span class="keyword">null</span>) &#123;</span><br><span class="line">      variables = Collections.emptyMap();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Query(fullQueryText, queryText, operationName, variables);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li>测试</li>
+</ul>
+<p><img src="/var/folders/84/6jh1114j4rx6m0b5h4w5_45h0000gn/T/abnerworks.Typora/image-20190804164253298.png" alt="image-20190804164253298"></p>
+<p><img src="/var/folders/84/6jh1114j4rx6m0b5h4w5_45h0000gn/T/abnerworks.Typora/image-20190804164354974.png" alt="image-20190804164354974"></p>
+<p><img src="/var/folders/84/6jh1114j4rx6m0b5h4w5_45h0000gn/T/abnerworks.Typora/image-20190804164517506.png" alt="image-20190804164517506"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>graphql 相比较 restapi 来说，各有优缺点。个人感觉 graphql的前景还是很大的，目前最大的问题其实还是相关的生态和基础设施还不够完善，也存在很大的迁移成本和学习成本。不过单纯从数据获取的角度来说，非常有优势！此处我们只做了一个非常浅的探索。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/graphql-graphiql-github/" rel="tag"># graphql, graphiql, github</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/13/httpurlconnection-e4-bd-bf-e7-94-a8http-e4-bb-a3-e7-90-86/" rel="next" title="HttpURLConnection使用http代理">
+                <i class="fa fa-chevron-left"></i> HttpURLConnection使用http代理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="xtestw">
+            
+              <p class="site-author-name" itemprop="name">xtestw</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">categories</span>
+                
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/xtestw" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#GraphQL-是什么"><span class="nav-number">1.</span> <span class="nav-text">GraphQL 是什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-number">1.1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#与-REST-API-相比的好处"><span class="nav-number">1.2.</span> <span class="nav-text">与 REST API 相比的好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么用"><span class="nav-number">2.</span> <span class="nav-text">怎么用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#几个基本概念"><span class="nav-number">2.1.</span> <span class="nav-text">几个基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实操"><span class="nav-number">2.2.</span> <span class="nav-text">实操</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
+      
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- blog_sidebar -->
+<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-1217509255829092" data-ad-slot="7837986674" data-ad-format="auto" data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">xtestw</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: window.location.pathname, 
+            owner: 'xtestw',
+            repo: 'xtestw.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: 'a9c003726fcdec4f8a58716dd939d7b257c6b72c',
+            
+                client_id: '76ac809eebae5aded61d'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+
+</body>
+</html>

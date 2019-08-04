@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://xtestw.com/"/>
-  <updated>2019-07-29T15:22:50.131Z</updated>
+  <updated>2019-08-04T15:04:43.685Z</updated>
   <id>http://xtestw.com/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title></title>
+    <link href="http://xtestw.com/2019/08/03/GraphQl-%E4%BD%BF%E7%94%A8-java/"/>
+    <id>http://xtestw.com/2019/08/03/GraphQl-使用-java/</id>
+    <published>2019-08-03T06:26:05.000Z</published>
+    <updated>2019-08-04T15:04:43.685Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;p&gt;去年在做内容库的时候，涉及到了多系统多数据源互相查询的情景，当时就想要将内容库的所有数据，增加统一的数据接入层，通过graphql的方式提供给上层业务使用，后面受限于人力没有实施。目前从头开始做站群相关的业务，顺带着浅尝了一下graphql，感觉还不错。&lt;/p&gt;
+&lt;h2 i
+      
+    
+    </summary>
+    
+      <category term="GraphQL" scheme="http://xtestw.com/categories/GraphQL/"/>
+    
+      <category term="Java" scheme="http://xtestw.com/categories/GraphQL/Java/"/>
+    
+      <category term="New Skill" scheme="http://xtestw.com/categories/GraphQL/Java/New-Skill/"/>
+    
+    
+      <category term="graphql, graphiql, github" scheme="http://xtestw.com/tags/graphql-graphiql-github/"/>
+    
+  </entry>
   
   <entry>
     <title>HttpURLConnection使用http代理</title>
@@ -418,27 +446,6 @@
       
       
         &lt;p&gt;工程中，某些对象我们只需要一个，比如线程池，缓存，对话框等的对象，我们通常的做法是可以定一个全局静态变量，然后通过程序初始化的时候就实例化他们，然后直接调用这个全局变量，但是这样有个问题，如果我的这个对象消耗的资源很多，而有的时候，我的程序在运行过程中又没用到这个对象，岂不
-      
-    
-    </summary>
-    
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>设计模式-工厂模式</title>
-    <link href="http://xtestw.com/2014/09/01/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-b7-a5-e5-8e-82-e6-a8-a1-e5-bc-8f/"/>
-    <id>http://xtestw.com/2014/09/01/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-b7-a5-e5-8e-82-e6-a8-a1-e5-bc-8f/</id>
-    <published>2014-08-31T20:12:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;p&gt;在面向对象的编程中，我们常常会用到new这个关键字，同时，面向对象可以实现多态，这样的话，我们常常就会用父类或者接口定义一个变量，在用到这个变量的时候，再new一个具体的对象，但是有的时候，这个new的对象不是确定的，可能是要根据不同的场景，new出不同的子类，这个很简单的
       
     
     </summary>
