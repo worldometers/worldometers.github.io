@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码bool find(int s){    for (int i=1;i&amp;lt;=n;i++)//从1到n编号    {         if (map[s][i] &amp;">
+<meta name="description" content="关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码1234567891011121314151617181920212223242526bool find(int s)&amp;#123;    for (int i=1;i">
 <meta name="keywords" content="blog,java,xtestw">
 <meta property="og:type" content="article">
 <meta property="og:title" content="匈牙利二分匹配">
 <meta property="og:url" content="http://xtestw.com/2013/04/28/e5-8c-88-e7-89-99-e5-88-a9-e4-ba-8c-e5-88-86-e5-8c-b9-e9-85-8d/index.html">
 <meta property="og:site_name" content="XtestW&#39;s Blog">
-<meta property="og:description" content="关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码bool find(int s){    for (int i=1;i&amp;lt;=n;i++)//从1到n编号    {         if (map[s][i] &amp;">
+<meta property="og:description" content="关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码1234567891011121314151617181920212223242526bool find(int s)&amp;#123;    for (int i=1;i">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-29T15:22:50.130Z">
+<meta property="og:updated_time" content="2019-08-10T21:22:11.592Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="匈牙利二分匹配">
-<meta name="twitter:description" content="关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码bool find(int s){    for (int i=1;i&amp;lt;=n;i++)//从1到n编号    {         if (map[s][i] &amp;">
+<meta name="twitter:description" content="关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码1234567891011121314151617181920212223242526bool find(int s)&amp;#123;    for (int i=1;i">
 
 
 
@@ -379,8 +379,8 @@
       
 
       
-        <pre><code>关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码</code></pre><p>bool find(int s)<br>{<br>    for (int i=1;i&lt;=n;i++)//从1到n编号<br>    {<br>         if (map[s][i] &amp;&amp; !visit[i])<br>        {<br>            visit[i]=1;<br>            if (pre[i]==0 || find(pre[i]))<br>             {<br>                 pre[i]=s;<br>                 return true;<br>             }<br>    }<br>    return false;<br>}</p>
-<p>int hungary()//返回最大匹配数<br>{<br>     int ans=0;<br>     for (int i=1;i&lt;=n;i++)<br>     {<br>        memset(visit,0,sizeof(visit));<br>        if (find(i)) ans++;<br>     }<br>     return ans;<br>}</p>
+        <pre><code>关于算法的说明，可以参看这个大牛的讲解，很详细： [http://imlazy.ycool.com/post.1603708.html](http://imlazy.ycool.com/post.1603708.html) 直接上代码</code></pre><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)<span class="comment">//从1到n编号</span></span><br><span class="line">    &#123;</span><br><span class="line">         <span class="keyword">if</span> (<span class="built_in">map</span>[s][i] &amp;&amp; !visit[i])</span><br><span class="line">        &#123;</span><br><span class="line">            visit[i]=<span class="number">1</span>;</span><br><span class="line">            <span class="keyword">if</span> (pre[i]==<span class="number">0</span> || find(pre[i]))</span><br><span class="line">             &#123;</span><br><span class="line">                 pre[i]=s;</span><br><span class="line">                 <span class="keyword">return</span> <span class="literal">true</span>;      </span><br><span class="line">             &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">hungary</span><span class="params">()</span><span class="comment">//返回最大匹配数</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">     <span class="keyword">int</span> ans=<span class="number">0</span>;</span><br><span class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)</span><br><span class="line">     &#123;</span><br><span class="line">        <span class="built_in">memset</span>(visit,<span class="number">0</span>,<span class="keyword">sizeof</span>(visit));</span><br><span class="line">        <span class="keyword">if</span> (find(i)) ans++;</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>  好吧，具体的代码就应该是这样了，但是二分图是无向图吧。。。有向图，怎么破…</p>
 
       

@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://xtestw.com/"/>
-  <updated>2019-08-04T15:20:14.039Z</updated>
+  <updated>2019-08-05T08:30:21.429Z</updated>
   <id>http://xtestw.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://xtestw.com/2019/08/03/GraphQl-%E4%BD%BF%E7%94%A8-java/"/>
     <id>http://xtestw.com/2019/08/03/GraphQl-使用-java/</id>
     <published>2019-08-03T06:26:05.000Z</published>
-    <updated>2019-08-04T15:20:14.039Z</updated>
+    <updated>2019-08-05T08:30:21.429Z</updated>
     
     <summary type="html">
     
@@ -74,13 +74,15 @@
     <link href="http://xtestw.com/2017/07/23/sdk-e7-af-a1-e6-94-b9/"/>
     <id>http://xtestw.com/2017/07/23/sdk-e7-af-a1-e6-94-b9/</id>
     <published>2017-07-23T12:51:22.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2019-08-10T21:16:47.351Z</updated>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 1. 解压jar或者ap
+        &lt;p&gt;前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 &lt;/p&gt;
+&lt;ol&gt;
+&lt;l
       
     
     </summary>
@@ -185,13 +187,13 @@
     <link href="http://xtestw.com/2015/04/05/cplusplus/"/>
     <id>http://xtestw.com/2015/04/05/cplusplus/</id>
     <published>2015-04-04T22:36:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2019-08-10T21:21:31.862Z</updated>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;class base{&lt;br&gt;    public:&lt;br&gt;        int i,j;&lt;br&gt;        base(){&lt;br&gt;            i=j=0;&lt;br&gt;        }&lt;br&gt;        base(int a,int b){&lt;br&gt;   
+        &lt;figure class=&quot;highlight c++&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;
       
     
     </summary>
@@ -203,8 +205,8 @@
   
   <entry>
     <title>c++ 默认构造函数</title>
-    <link href="http://xtestw.com/2015/04/03/c-e9-bb-98-e8-ae-a4-e6-9e-84-e9-80-a0-e5-87-bd-e6-95-b0/"/>
-    <id>http://xtestw.com/2015/04/03/c-e9-bb-98-e8-ae-a4-e6-9e-84-e9-80-a0-e5-87-bd-e6-95-b0/</id>
+    <link href="http://xtestw.com/2015/04/03/c++%20%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/"/>
+    <id>http://xtestw.com/2015/04/03/c++ 默认构造函数/</id>
     <published>2015-04-03T05:37:00.000Z</published>
     <updated>2019-07-29T15:22:50.130Z</updated>
     

@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 1. 解压jar或者apk的包 2. JD-GUI 反编译查看class的相关代码，找到修改点 3. 自己编写相应的方法或者类，使用javaassis">
+<meta name="description" content="前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。   解压jar或者apk的包   JD-GUI 反编译查看class的相关代码，找到修改点  自己编写相应的方法或者类，使用 javaassist 注">
 <meta name="keywords" content="blog,java,xtestw">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sdk篡改">
 <meta property="og:url" content="http://xtestw.com/2017/07/23/sdk-e7-af-a1-e6-94-b9/index.html">
 <meta property="og:site_name" content="XtestW&#39;s Blog">
-<meta property="og:description" content="前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 1. 解压jar或者apk的包 2. JD-GUI 反编译查看class的相关代码，找到修改点 3. 自己编写相应的方法或者类，使用javaassis">
+<meta property="og:description" content="前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。   解压jar或者apk的包   JD-GUI 反编译查看class的相关代码，找到修改点  自己编写相应的方法或者类，使用 javaassist 注">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-29T15:22:50.131Z">
+<meta property="og:updated_time" content="2019-08-10T21:16:47.351Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="sdk篡改">
-<meta name="twitter:description" content="前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 1. 解压jar或者apk的包 2. JD-GUI 反编译查看class的相关代码，找到修改点 3. 自己编写相应的方法或者类，使用javaassis">
+<meta name="twitter:description" content="前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。   解压jar或者apk的包   JD-GUI 反编译查看class的相关代码，找到修改点  自己编写相应的方法或者类，使用 javaassist 注">
 
 
 
@@ -379,8 +379,20 @@
       
 
       
-        <p>前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 1. 解压jar或者apk的包 2. JD-GUI 反编译查看class的相关代码，找到修改点 3. 自己编写相应的方法或者类，使用javaassist注入到class文件 4. 重新打包 javassist 使用方法参考： <a href="https://jboss-javassist.github.io/javassist/tutorial/tutorial.html" target="_blank" rel="noopener">https://jboss-javassist.github.io/javassist/tutorial/tutorial.html</a> 附上测试代码，修改一个方法</p>
-<p>public static void main(String[] args) {<br>    try {<br>      javassist.tools.reflect.Loader cl = new javassist.tools.reflect.Loader();<br>      ClassPool pool = ClassPool.getDefault();<br>      pool.insertClassPath(“/tmp/aa/“);<br>      CtClass cc = pool.get(“com.facebook.ads.internal.d.g”);<br>      CtMethod ctmethod = cc.getDeclaredMethod(“c”);<br>      cc.getDeclaredField(“c”);<br>      // getCode()即为需要替换的的代码<br>      ctmethod.setBody(getCode());<br>      cc.writeFile(“/tmp/aa/“);<br>    } catch (CannotCompileException e) {<br>      e.printStackTrace();<br>    } catch (NotFoundException e) {<br>      e.printStackTrace();<br>    } catch (IOException e) {<br>      e.printStackTrace();<br>    }<br>  }<br>}</p>
+        <p>前段时间，因为一年前篡改了一个sdk的包，导致了一系列不可预知的损失，这也充分说明了技术的正确性，需要决策的正确性来支撑的。作为技术人员，不仅仅要考虑技术的可行性，也要考虑实施后的风险和结果的预期假设。 从工程角度，简单记录一下篡改sdk包的技术。 </p>
+<ol>
+<li><p>解压jar或者apk的包 </p>
+</li>
+<li><p>JD-GUI 反编译查看class的相关代码，找到修改点</p>
+</li>
+<li><p>自己编写相应的方法或者类，使用 <code>javaassist</code> 注入到class文件 </p>
+</li>
+<li><p>重新打包</p>
+<p><code>javassist</code> 使用方法参考： <a href="https://jboss-javassist.github.io/javassist/tutorial/tutorial.html" target="_blank" rel="noopener">https://jboss-javassist.github.io/javassist/tutorial/tutorial.html</a> 附上测试代码，修改一个方法</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      javassist.tools.reflect.Loader cl = <span class="keyword">new</span> javassist.tools.reflect.Loader();</span><br><span class="line">      ClassPool pool = ClassPool.getDefault();</span><br><span class="line">      pool.insertClassPath(<span class="string">"/tmp/aa/"</span>);</span><br><span class="line">      CtClass cc = pool.get(<span class="string">"com.facebook.ads.internal.d.g"</span>);</span><br><span class="line">      CtMethod ctmethod = cc.getDeclaredMethod(<span class="string">"c"</span>);</span><br><span class="line">      cc.getDeclaredField(<span class="string">"c"</span>);</span><br><span class="line">      <span class="comment">// getCode()即为需要替换的的代码</span></span><br><span class="line">      ctmethod.setBody(getCode());</span><br><span class="line">      cc.writeFile(<span class="string">"/tmp/aa/"</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (CannotCompileException e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (NotFoundException e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">      e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>

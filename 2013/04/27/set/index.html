@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下 1.有father数组，全部初始化为本身 2.添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b 3.通过查找祖先，来确定是否在一个集合内 void init(int n){//初始化，节点编号1-n    for (int i=1;i&amp;lt;=n;i++) fat">
+<meta name="description" content="好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下  有father数组，全部初始化为本身  添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b  通过查找祖先，来确定是否在一个集合内  123456789101112131415161718192021void init(int n)&amp;#123;//初始化，节点编号">
 <meta name="keywords" content="blog,java,xtestw">
 <meta property="og:type" content="article">
 <meta property="og:title" content="并查集">
 <meta property="og:url" content="http://xtestw.com/2013/04/27/set/index.html">
 <meta property="og:site_name" content="XtestW&#39;s Blog">
-<meta property="og:description" content="好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下 1.有father数组，全部初始化为本身 2.添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b 3.通过查找祖先，来确定是否在一个集合内 void init(int n){//初始化，节点编号1-n    for (int i=1;i&amp;lt;=n;i++) fat">
+<meta property="og:description" content="好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下  有father数组，全部初始化为本身  添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b  通过查找祖先，来确定是否在一个集合内  123456789101112131415161718192021void init(int n)&amp;#123;//初始化，节点编号">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-29T15:22:50.130Z">
+<meta property="og:updated_time" content="2019-08-10T21:19:06.666Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并查集">
-<meta name="twitter:description" content="好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下 1.有father数组，全部初始化为本身 2.添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b 3.通过查找祖先，来确定是否在一个集合内 void init(int n){//初始化，节点编号1-n    for (int i=1;i&amp;lt;=n;i++) fat">
+<meta name="twitter:description" content="好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下  有father数组，全部初始化为本身  添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b  通过查找祖先，来确定是否在一个集合内  123456789101112131415161718192021void init(int n)&amp;#123;//初始化，节点编号">
 
 
 
@@ -379,11 +379,14 @@
       
 
       
-        <p>  好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下 1.有father数组，全部初始化为本身 2.添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b 3.通过查找祖先，来确定是否在一个集合内</p>
-<p>void init(int n){//初始化，节点编号1-n<br>    for (int i=1;i&lt;=n;i++) father[i]=i;<br>}</p>
-<p>int find(int x)//查找祖先节点<br>{<br>while (father[x]!=x) x=father[x];<br>return x;<br>}</p>
-<p>void add(int s,int t)//增加一个关系，改变集合<br>{<br>  int a=find(s);<br>  int b=find(t);<br>  father[a]=b;<br>}</p>
-<p>bool judge(int s,int t)//判断是不是一个集合<br>{<br>    return find(s)==find(t);<br>}</p>
+        <p>  好吧，前两天做了一场CF，遇到一道并查集的题目，感觉并查集还需学习啊，记录一下 具体的算法如下</p>
+<ol>
+<li>有father数组，全部初始化为本身 </li>
+<li>添加一个关系进来的时候，s–t，找到s的祖先a,t的祖先b，将a的father设为b </li>
+<li>通过查找祖先，来确定是否在一个集合内</li>
+</ol>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;<span class="comment">//初始化，节点编号1-n</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++) father[i]=i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span> x)</span><span class="comment">//查找祖先节点</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">while</span> (father[x]!=x) x=father[x];</span><br><span class="line">	<span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> s,<span class="keyword">int</span> t)</span><span class="comment">//增加一个关系，改变集合</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> a=find(s);</span><br><span class="line">  <span class="keyword">int</span> b=find(t);</span><br><span class="line">  father[a]=b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">judge</span><span class="params">(<span class="keyword">int</span> s,<span class="keyword">int</span> t)</span><span class="comment">//判断是不是一个集合</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> find(s)==find(t);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>

@@ -81,18 +81,18 @@
 
 
 
-<meta name="description" content="class base{    public:        int i,j;        base(){            i=j=0;        }        base(int a,int b){            i=a;j=b;        }};class derived:public base{        public:        derived(int a,">
+<meta name="description" content="123456789101112131415161718192021222324class base&amp;#123;    public:        int i,j;        base()&amp;#123;            i=j=0;        &amp;#125;        base(int a,int b)&amp;#123;            i=a;j=b;        &amp;#125;">
 <meta name="keywords" content="blog,java,xtestw">
 <meta property="og:type" content="article">
 <meta property="og:title" content="c++ 子类要正确的调用父类构造函数">
 <meta property="og:url" content="http://xtestw.com/2015/04/05/cplusplus/index.html">
 <meta property="og:site_name" content="XtestW&#39;s Blog">
-<meta property="og:description" content="class base{    public:        int i,j;        base(){            i=j=0;        }        base(int a,int b){            i=a;j=b;        }};class derived:public base{        public:        derived(int a,">
+<meta property="og:description" content="123456789101112131415161718192021222324class base&amp;#123;    public:        int i,j;        base()&amp;#123;            i=j=0;        &amp;#125;        base(int a,int b)&amp;#123;            i=a;j=b;        &amp;#125;">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-07-29T15:22:50.131Z">
+<meta property="og:updated_time" content="2019-08-10T21:21:31.862Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="c++ 子类要正确的调用父类构造函数">
-<meta name="twitter:description" content="class base{    public:        int i,j;        base(){            i=j=0;        }        base(int a,int b){            i=a;j=b;        }};class derived:public base{        public:        derived(int a,">
+<meta name="twitter:description" content="123456789101112131415161718192021222324class base&amp;#123;    public:        int i,j;        base()&amp;#123;            i=j=0;        &amp;#125;        base(int a,int b)&amp;#123;            i=a;j=b;        &amp;#125;">
 
 
 
@@ -379,12 +379,11 @@
       
 
       
-        <p>class base{<br>    public:<br>        int i,j;<br>        base(){<br>            i=j=0;<br>        }<br>        base(int a,int b){<br>            i=a;j=b;<br>        }<br>};<br>class derived:public base{<br>        public:<br>        derived(int a,int b){<br>             base(a,b);<br>        }<br>};    </p>
-<p>int main(){<br>　　derived d(3,1);<br>　　cout&lt;&lt;d.i&lt;&lt;” “&lt;&lt;d.j&lt;&lt;endl;<br>　　return 0;<br>}</p>
+        <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="keyword">int</span> i,j;</span><br><span class="line">        base()&#123;</span><br><span class="line">            i=j=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        base(<span class="keyword">int</span> a,<span class="keyword">int</span> b)&#123;</span><br><span class="line">            i=a;j=b;</span><br><span class="line">        &#125;    </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">derived</span>:</span><span class="keyword">public</span> base&#123;</span><br><span class="line">        <span class="keyword">public</span>:</span><br><span class="line">        derived(<span class="keyword">int</span> a,<span class="keyword">int</span> b)&#123;</span><br><span class="line">             base(a,b); </span><br><span class="line">        &#125;  </span><br><span class="line">&#125;;    </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">　　<span class="function">derived <span class="title">d</span><span class="params">(<span class="number">3</span>,<span class="number">1</span>)</span></span>;</span><br><span class="line">　　<span class="built_in">cout</span>&lt;&lt;d.i&lt;&lt;<span class="string">" "</span>&lt;&lt;d.j&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">　　<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <p>上面的这段代码会输出什么呢？！正确的答案是输出了”0 0”. 我的理解是，虽然其中调用了base(a,b) 但是其实操作的a和b不是当前d的a,b，其实是定义了一个新的base的对象。正确的写法应该是下面这样</p>
-<p>class base{<br>    public:<br>        int i,j;<br>        base(){<br>            i=j=0;<br>        }<br>        base(int a,int b){<br>            i=a;j=b;<br>        }<br>};<br>class dervied:public base{<br>        public:<br>        derived(int a,int b):base(a,b){</p>
-<pre><code>}  </code></pre><p>};    </p>
-<p>int main(){<br>　　derived d(3,1);<br>　　cout&lt;&lt;d.i&lt;&lt;” “&lt;&lt;d.j&lt;&lt;endl;<br>　　return 0;<br>}</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">base</span>&#123;</span></span><br><span class="line">    <span class="keyword">public</span>:</span><br><span class="line">        <span class="keyword">int</span> i,j;</span><br><span class="line">        base()&#123;</span><br><span class="line">            i=j=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        base(<span class="keyword">int</span> a,<span class="keyword">int</span> b)&#123;</span><br><span class="line">            i=a;j=b;</span><br><span class="line">        &#125;    </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">dervied</span>:</span><span class="keyword">public</span> base&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span>:</span><br><span class="line">        derived(<span class="keyword">int</span> a,<span class="keyword">int</span> b):base(a,b)&#123;    </span><br><span class="line">        &#125;  </span><br><span class="line">&#125;;    </span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">　　<span class="function">derived <span class="title">d</span><span class="params">(<span class="number">3</span>,<span class="number">1</span>)</span></span>;</span><br><span class="line">　　<span class="built_in">cout</span>&lt;&lt;d.i&lt;&lt;<span class="string">" "</span>&lt;&lt;d.j&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">　　<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -409,7 +408,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/04/03/c-e9-bb-98-e8-ae-a4-e6-9e-84-e9-80-a0-e5-87-bd-e6-95-b0/" rel="next" title="c++ 默认构造函数">
+              <a href="/2015/04/03/c++ 默认构造函数/" rel="next" title="c++ 默认构造函数">
                 <i class="fa fa-chevron-left"></i> c++ 默认构造函数
               </a>
             
