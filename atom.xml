@@ -5,9 +5,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://xtestw.com/"/>
-  <updated>2019-08-05T08:30:21.429Z</updated>
-  <id>http://xtestw.com/</id>
+  <link href="http://worldmeters.top/"/>
+  <updated>2020-05-01T18:41:40.955Z</updated>
+  <id>http://worldmeters.top/</id>
   
   <author>
     <name>xtestw</name>
@@ -18,10 +18,10 @@
   
   <entry>
     <title>GraphQl 使用 - java</title>
-    <link href="http://xtestw.com/2019/08/03/GraphQl-%E4%BD%BF%E7%94%A8-java/"/>
-    <id>http://xtestw.com/2019/08/03/GraphQl-使用-java/</id>
+    <link href="http://worldmeters.top/2019/08/03/GraphQl-%E4%BD%BF%E7%94%A8-java/"/>
+    <id>http://worldmeters.top/2019/08/03/GraphQl-使用-java/</id>
     <published>2019-08-03T06:26:05.000Z</published>
-    <updated>2019-08-05T08:30:21.429Z</updated>
+    <updated>2020-05-01T18:41:40.955Z</updated>
     
     <summary type="html">
     
@@ -33,27 +33,27 @@
     
     </summary>
     
-      <category term="GraphQL" scheme="http://xtestw.com/categories/GraphQL/"/>
+      <category term="GraphQL" scheme="http://worldmeters.top/categories/GraphQL/"/>
     
-      <category term="Java" scheme="http://xtestw.com/categories/GraphQL/Java/"/>
+      <category term="Java" scheme="http://worldmeters.top/categories/GraphQL/Java/"/>
     
-      <category term="New Skill" scheme="http://xtestw.com/categories/GraphQL/Java/New-Skill/"/>
+      <category term="New Skill" scheme="http://worldmeters.top/categories/GraphQL/Java/New-Skill/"/>
     
     
-      <category term="graphql" scheme="http://xtestw.com/tags/graphql/"/>
+      <category term="graphql" scheme="http://worldmeters.top/tags/graphql/"/>
     
-      <category term="graphiql" scheme="http://xtestw.com/tags/graphiql/"/>
+      <category term="graphiql" scheme="http://worldmeters.top/tags/graphiql/"/>
     
-      <category term="github" scheme="http://xtestw.com/tags/github/"/>
+      <category term="github" scheme="http://worldmeters.top/tags/github/"/>
     
   </entry>
   
   <entry>
     <title>HttpURLConnection使用http代理</title>
-    <link href="http://xtestw.com/2017/08/13/httpurlconnection-e4-bd-bf-e7-94-a8http-e4-bb-a3-e7-90-86/"/>
-    <id>http://xtestw.com/2017/08/13/httpurlconnection-e4-bd-bf-e7-94-a8http-e4-bb-a3-e7-90-86/</id>
+    <link href="http://worldmeters.top/2017/08/13/httpurlconnection-e4-bd-bf-e7-94-a8http-e4-bb-a3-e7-90-86/"/>
+    <id>http://worldmeters.top/2017/08/13/httpurlconnection-e4-bd-bf-e7-94-a8http-e4-bb-a3-e7-90-86/</id>
     <published>2017-08-13T14:38:08.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.951Z</updated>
     
     <summary type="html">
     
@@ -64,17 +64,17 @@
     
     </summary>
     
-      <category term="JAVA" scheme="http://xtestw.com/categories/JAVA/"/>
+      <category term="JAVA" scheme="http://worldmeters.top/categories/JAVA/"/>
     
     
   </entry>
   
   <entry>
     <title>sdk篡改</title>
-    <link href="http://xtestw.com/2017/07/23/sdk-e7-af-a1-e6-94-b9/"/>
-    <id>http://xtestw.com/2017/07/23/sdk-e7-af-a1-e6-94-b9/</id>
+    <link href="http://worldmeters.top/2017/07/23/sdk-e7-af-a1-e6-94-b9/"/>
+    <id>http://worldmeters.top/2017/07/23/sdk-e7-af-a1-e6-94-b9/</id>
     <published>2017-07-23T12:51:22.000Z</published>
-    <updated>2019-08-10T21:16:47.351Z</updated>
+    <updated>2020-05-01T18:41:40.948Z</updated>
     
     <summary type="html">
     
@@ -87,17 +87,17 @@
     
     </summary>
     
-      <category term="JAVA" scheme="http://xtestw.com/categories/JAVA/"/>
+      <category term="JAVA" scheme="http://worldmeters.top/categories/JAVA/"/>
     
     
   </entry>
   
   <entry>
     <title>RSA整理</title>
-    <link href="http://xtestw.com/2016/05/24/rsa-e6-95-b4-e7-90-86/"/>
-    <id>http://xtestw.com/2016/05/24/rsa-e6-95-b4-e7-90-86/</id>
+    <link href="http://worldmeters.top/2016/05/24/rsa-e6-95-b4-e7-90-86/"/>
+    <id>http://worldmeters.top/2016/05/24/rsa-e6-95-b4-e7-90-86/</id>
     <published>2016-05-24T15:17:24.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.937Z</updated>
     
     <summary type="html">
     
@@ -112,19 +112,19 @@
     
     </summary>
     
-      <category term="Theory" scheme="http://xtestw.com/categories/Theory/"/>
+      <category term="Theory" scheme="http://worldmeters.top/categories/Theory/"/>
     
     
-      <category term="RSA" scheme="http://xtestw.com/tags/RSA/"/>
+      <category term="RSA" scheme="http://worldmeters.top/tags/RSA/"/>
     
   </entry>
   
   <entry>
     <title>c++对象模型</title>
-    <link href="http://xtestw.com/2016/05/05/cplusplusobjectmodel/"/>
-    <id>http://xtestw.com/2016/05/05/cplusplusobjectmodel/</id>
+    <link href="http://worldmeters.top/2016/05/05/cplusplusobjectmodel/"/>
+    <id>http://worldmeters.top/2016/05/05/cplusplusobjectmodel/</id>
     <published>2016-05-04T16:22:50.000Z</published>
-    <updated>2019-07-29T15:22:50.130Z</updated>
+    <updated>2020-05-01T18:41:40.948Z</updated>
     
     <summary type="html">
     
@@ -135,17 +135,17 @@
     
     </summary>
     
-      <category term="C++" scheme="http://xtestw.com/categories/C/"/>
+      <category term="C++" scheme="http://worldmeters.top/categories/C/"/>
     
     
   </entry>
   
   <entry>
     <title>Linux 技巧：让进程在后台可靠运行的几种方法</title>
-    <link href="http://xtestw.com/2016/01/29/linuxrunonbackground/"/>
-    <id>http://xtestw.com/2016/01/29/linuxrunonbackground/</id>
+    <link href="http://worldmeters.top/2016/01/29/linuxrunonbackground/"/>
+    <id>http://worldmeters.top/2016/01/29/linuxrunonbackground/</id>
     <published>2016-01-29T07:18:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.934Z</updated>
     
     <summary type="html">
     
@@ -156,17 +156,17 @@
     
     </summary>
     
-      <category term="Linux" scheme="http://xtestw.com/categories/Linux/"/>
+      <category term="Linux" scheme="http://worldmeters.top/categories/Linux/"/>
     
     
   </entry>
   
   <entry>
     <title>x&amp;(-x)取x的最后一个1的证明</title>
-    <link href="http://xtestw.com/2015/04/22/proof/"/>
-    <id>http://xtestw.com/2015/04/22/proof/</id>
+    <link href="http://worldmeters.top/2015/04/22/proof/"/>
+    <id>http://worldmeters.top/2015/04/22/proof/</id>
     <published>2015-04-22T10:49:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.937Z</updated>
     
     <summary type="html">
     
@@ -177,17 +177,17 @@
     
     </summary>
     
-      <category term="ACMICPC" scheme="http://xtestw.com/categories/ACMICPC/"/>
+      <category term="ACMICPC" scheme="http://worldmeters.top/categories/ACMICPC/"/>
     
     
   </entry>
   
   <entry>
     <title>c++ 子类要正确的调用父类构造函数</title>
-    <link href="http://xtestw.com/2015/04/05/cplusplus/"/>
-    <id>http://xtestw.com/2015/04/05/cplusplus/</id>
+    <link href="http://worldmeters.top/2015/04/05/cplusplus/"/>
+    <id>http://worldmeters.top/2015/04/05/cplusplus/</id>
     <published>2015-04-04T22:36:00.000Z</published>
-    <updated>2019-08-10T21:21:31.862Z</updated>
+    <updated>2020-05-01T18:41:40.942Z</updated>
     
     <summary type="html">
     
@@ -198,17 +198,17 @@
     
     </summary>
     
-      <category term="C++" scheme="http://xtestw.com/categories/C/"/>
+      <category term="C++" scheme="http://worldmeters.top/categories/C/"/>
     
     
   </entry>
   
   <entry>
     <title>c++ 默认构造函数</title>
-    <link href="http://xtestw.com/2015/04/03/c++%20%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/"/>
-    <id>http://xtestw.com/2015/04/03/c++ 默认构造函数/</id>
+    <link href="http://worldmeters.top/2015/04/03/c++%20%E9%BB%98%E8%AE%A4%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/"/>
+    <id>http://worldmeters.top/2015/04/03/c++ 默认构造函数/</id>
     <published>2015-04-03T05:37:00.000Z</published>
-    <updated>2019-07-29T15:22:50.130Z</updated>
+    <updated>2020-05-01T18:41:40.940Z</updated>
     
     <summary type="html">
     
@@ -219,17 +219,17 @@
     
     </summary>
     
-      <category term="C++" scheme="http://xtestw.com/categories/C/"/>
+      <category term="C++" scheme="http://worldmeters.top/categories/C/"/>
     
     
   </entry>
   
   <entry>
     <title>hibernate ID 生成方式</title>
-    <link href="http://xtestw.com/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/"/>
-    <id>http://xtestw.com/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/</id>
+    <link href="http://worldmeters.top/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/"/>
+    <id>http://worldmeters.top/2015/02/10/hibernateid-e7-94-9f-e6-88-90-e6-96-b9-e5-bc-8f/</id>
     <published>2015-02-10T05:08:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.939Z</updated>
     
     <summary type="html">
     
@@ -240,17 +240,17 @@
     
     </summary>
     
-      <category term="JAVA" scheme="http://xtestw.com/categories/JAVA/"/>
+      <category term="JAVA" scheme="http://worldmeters.top/categories/JAVA/"/>
     
     
   </entry>
   
   <entry>
     <title>windows核心编程-错误处理</title>
-    <link href="http://xtestw.com/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/"/>
-    <id>http://xtestw.com/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/</id>
+    <link href="http://worldmeters.top/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/"/>
+    <id>http://worldmeters.top/2015/01/29/windows-e6-a0-b8-e5-bf-83-e7-bc-96-e7-a8-8b-e9-94-99-e8-af-af-e5-a4-84-e7-90-86/</id>
     <published>2015-01-29T06:04:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.944Z</updated>
     
     <summary type="html">
     
@@ -262,17 +262,17 @@
     
     </summary>
     
-      <category term="ACMICPC" scheme="http://xtestw.com/categories/ACMICPC/"/>
+      <category term="ACMICPC" scheme="http://worldmeters.top/categories/ACMICPC/"/>
     
     
   </entry>
   
   <entry>
     <title>IOCP</title>
-    <link href="http://xtestw.com/2015/01/29/iocp/"/>
-    <id>http://xtestw.com/2015/01/29/iocp/</id>
+    <link href="http://worldmeters.top/2015/01/29/iocp/"/>
+    <id>http://worldmeters.top/2015/01/29/iocp/</id>
     <published>2015-01-29T05:41:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.949Z</updated>
     
     <summary type="html">
     
@@ -283,17 +283,17 @@
     
     </summary>
     
-      <category term="Theory" scheme="http://xtestw.com/categories/Theory/"/>
+      <category term="Theory" scheme="http://worldmeters.top/categories/Theory/"/>
     
     
   </entry>
   
   <entry>
     <title>Xchart 源码分析（1）</title>
-    <link href="http://xtestw.com/2014/12/22/xchart-e6-ba-90-e7-a0-81-e5-88-86-e6-9e-90-ef-bc-881-ef-bc-89/"/>
-    <id>http://xtestw.com/2014/12/22/xchart-e6-ba-90-e7-a0-81-e5-88-86-e6-9e-90-ef-bc-881-ef-bc-89/</id>
+    <link href="http://worldmeters.top/2014/12/22/xchart-e6-ba-90-e7-a0-81-e5-88-86-e6-9e-90-ef-bc-881-ef-bc-89/"/>
+    <id>http://worldmeters.top/2014/12/22/xchart-e6-ba-90-e7-a0-81-e5-88-86-e6-9e-90-ef-bc-881-ef-bc-89/</id>
     <published>2014-12-21T23:04:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.957Z</updated>
     
     <summary type="html">
     
@@ -304,17 +304,17 @@
     
     </summary>
     
-      <category term="SourceReading" scheme="http://xtestw.com/categories/SourceReading/"/>
+      <category term="SourceReading" scheme="http://worldmeters.top/categories/SourceReading/"/>
     
     
   </entry>
   
   <entry>
     <title>设计模式-代理模式</title>
-    <link href="http://xtestw.com/2014/09/08/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e4-bb-a3-e7-90-86-e6-a8-a1-e5-bc-8f/"/>
-    <id>http://xtestw.com/2014/09/08/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e4-bb-a3-e7-90-86-e6-a8-a1-e5-bc-8f/</id>
+    <link href="http://worldmeters.top/2014/09/08/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e4-bb-a3-e7-90-86-e6-a8-a1-e5-bc-8f/"/>
+    <id>http://worldmeters.top/2014/09/08/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e4-bb-a3-e7-90-86-e6-a8-a1-e5-bc-8f/</id>
     <published>2014-09-08T01:11:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.952Z</updated>
     
     <summary type="html">
     
@@ -325,17 +325,17 @@
     
     </summary>
     
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
+      <category term="Design Pattern" scheme="http://worldmeters.top/categories/Design-Pattern/"/>
     
     
   </entry>
   
   <entry>
     <title>设计模式-状态模式</title>
-    <link href="http://xtestw.com/2014/09/07/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-8a-b6-e6-80-81-e6-a8-a1-e5-bc-8f/"/>
-    <id>http://xtestw.com/2014/09/07/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-8a-b6-e6-80-81-e6-a8-a1-e5-bc-8f/</id>
+    <link href="http://worldmeters.top/2014/09/07/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-8a-b6-e6-80-81-e6-a8-a1-e5-bc-8f/"/>
+    <id>http://worldmeters.top/2014/09/07/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e7-8a-b6-e6-80-81-e6-a8-a1-e5-bc-8f/</id>
     <published>2014-09-07T05:18:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.956Z</updated>
     
     <summary type="html">
     
@@ -348,17 +348,17 @@
     
     </summary>
     
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
+      <category term="Design Pattern" scheme="http://worldmeters.top/categories/Design-Pattern/"/>
     
     
   </entry>
   
   <entry>
     <title>设计模式-迭代器模式和组合模式</title>
-    <link href="http://xtestw.com/2014/09/06/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-bf-ad-e4-bb-a3-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e7-bb-84-e5-90-88-e6-a8-a1-e5-bc-8f/"/>
-    <id>http://xtestw.com/2014/09/06/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-bf-ad-e4-bb-a3-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e7-bb-84-e5-90-88-e6-a8-a1-e5-bc-8f/</id>
+    <link href="http://worldmeters.top/2014/09/06/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-bf-ad-e4-bb-a3-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e7-bb-84-e5-90-88-e6-a8-a1-e5-bc-8f/"/>
+    <id>http://worldmeters.top/2014/09/06/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e8-bf-ad-e4-bb-a3-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e7-bb-84-e5-90-88-e6-a8-a1-e5-bc-8f/</id>
     <published>2014-09-05T20:52:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.954Z</updated>
     
     <summary type="html">
     
@@ -370,17 +370,17 @@
     
     </summary>
     
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
+      <category term="Design Pattern" scheme="http://worldmeters.top/categories/Design-Pattern/"/>
     
     
   </entry>
   
   <entry>
     <title>设计模式-模板方法</title>
-    <link href="http://xtestw.com/2014/09/05/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e6-a8-a1-e6-9d-bf-e6-96-b9-e6-b3-95/"/>
-    <id>http://xtestw.com/2014/09/05/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e6-a8-a1-e6-9d-bf-e6-96-b9-e6-b3-95/</id>
+    <link href="http://worldmeters.top/2014/09/05/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e6-a8-a1-e6-9d-bf-e6-96-b9-e6-b3-95/"/>
+    <id>http://worldmeters.top/2014/09/05/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e6-a8-a1-e6-9d-bf-e6-96-b9-e6-b3-95/</id>
     <published>2014-09-04T19:36:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.953Z</updated>
     
     <summary type="html">
     
@@ -392,17 +392,17 @@
     
     </summary>
     
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
+      <category term="Design Pattern" scheme="http://worldmeters.top/categories/Design-Pattern/"/>
     
     
   </entry>
   
   <entry>
     <title>设计模式-适配器模式和外观模式</title>
-    <link href="http://xtestw.com/2014/09/04/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e9-80-82-e9-85-8d-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e5-a4-96-e8-a7-82-e6-a8-a1-e5-bc-8f/"/>
-    <id>http://xtestw.com/2014/09/04/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e9-80-82-e9-85-8d-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e5-a4-96-e8-a7-82-e6-a8-a1-e5-bc-8f/</id>
+    <link href="http://worldmeters.top/2014/09/04/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e9-80-82-e9-85-8d-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e5-a4-96-e8-a7-82-e6-a8-a1-e5-bc-8f/"/>
+    <id>http://worldmeters.top/2014/09/04/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e9-80-82-e9-85-8d-e5-99-a8-e6-a8-a1-e5-bc-8f-e5-92-8c-e5-a4-96-e8-a7-82-e6-a8-a1-e5-bc-8f/</id>
     <published>2014-09-03T21:46:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.941Z</updated>
     
     <summary type="html">
     
@@ -414,17 +414,17 @@
     
     </summary>
     
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
+      <category term="Design Pattern" scheme="http://worldmeters.top/categories/Design-Pattern/"/>
     
     
   </entry>
   
   <entry>
     <title>设计模式-命令模式</title>
-    <link href="http://xtestw.com/2014/09/03/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-91-bd-e4-bb-a4-e6-a8-a1-e5-bc-8f/"/>
-    <id>http://xtestw.com/2014/09/03/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-91-bd-e4-bb-a4-e6-a8-a1-e5-bc-8f/</id>
+    <link href="http://worldmeters.top/2014/09/03/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-91-bd-e4-bb-a4-e6-a8-a1-e5-bc-8f/"/>
+    <id>http://worldmeters.top/2014/09/03/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-91-bd-e4-bb-a4-e6-a8-a1-e5-bc-8f/</id>
     <published>2014-09-02T21:26:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.949Z</updated>
     
     <summary type="html">
     
@@ -435,17 +435,17 @@
     
     </summary>
     
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
+      <category term="Design Pattern" scheme="http://worldmeters.top/categories/Design-Pattern/"/>
     
     
   </entry>
   
   <entry>
     <title>设计模式-单件模式</title>
-    <link href="http://xtestw.com/2014/09/02/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-8d-95-e4-bb-b6-e6-a8-a1-e5-bc-8f/"/>
-    <id>http://xtestw.com/2014/09/02/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-8d-95-e4-bb-b6-e6-a8-a1-e5-bc-8f/</id>
+    <link href="http://worldmeters.top/2014/09/02/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-8d-95-e4-bb-b6-e6-a8-a1-e5-bc-8f/"/>
+    <id>http://worldmeters.top/2014/09/02/e8-ae-be-e8-ae-a1-e6-a8-a1-e5-bc-8f-e5-8d-95-e4-bb-b6-e6-a8-a1-e5-bc-8f/</id>
     <published>2014-09-01T22:42:00.000Z</published>
-    <updated>2019-07-29T15:22:50.131Z</updated>
+    <updated>2020-05-01T18:41:40.953Z</updated>
     
     <summary type="html">
     
@@ -456,7 +456,7 @@
     
     </summary>
     
-      <category term="Design Pattern" scheme="http://xtestw.com/categories/Design-Pattern/"/>
+      <category term="Design Pattern" scheme="http://worldmeters.top/categories/Design-Pattern/"/>
     
     
   </entry>
